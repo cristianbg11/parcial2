@@ -137,7 +137,7 @@
                                         class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu"><a class="dropdown-item" role="presentation" href="/perfil"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Perfil</a><a class="dropdown-item" role="presentation" href="#"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Settings</a>
                                         <a
                                             class="dropdown-item" role="presentation" href="#"><i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Activity log</a>
-                                            <div class="dropdown-divider"></div><a class="dropdown-item" role="presentation" href="#"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Logout</a></div>
+                                            <div class="dropdown-divider"></div><a class="dropdown-item" role="presentation" href="/salir"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Salir</a></div>
                     </li>
                     </li>
                     </ul>
@@ -206,18 +206,18 @@
                                         <form>
                                             <div class="form-row">
                                                 <div class="col">
-                                                    <div class="form-group"><label for="username"><strong>Username</strong></label><input class="form-control" type="text" placeholder="user.name" name="username"></div>
+                                                    <div class="form-group"><label for="username"><strong>Username</strong></label><input class="form-control" type="text" placeholder="${usuario.username}" name="username"></div>
                                                 </div>
                                                 <div class="col">
-                                                    <div class="form-group"><label for="email"><strong>Email</strong></label><input class="form-control" type="email" placeholder="user@example.com" name="email"></div>
+                                                    <div class="form-group"><label for="email"><strong>Email</strong></label><input class="form-control" type="email" placeholder="${usuario.email}" name="email"></div>
                                                 </div>
                                             </div>
                                             <div class="form-row">
                                                 <div class="col">
-                                                    <div class="form-group"><label for="first_name"><strong>Nombre</strong></label><input class="form-control" type="text" placeholder="John" name="nombre"></div>
+                                                    <div class="form-group"><label for="first_name"><strong>Nombre</strong></label><input class="form-control" type="text" placeholder="${usuario.nombre}" name="nombre"></div>
                                                 </div>
                                                 <div class="col">
-                                                    <div class="form-group"><label for="last_name"><strong>Edad</strong></label><input class="form-control" type="text" placeholder="Doe" name="edad"></div>
+                                                    <div class="form-group"><label for="last_name"><strong>Edad</strong></label><input class="form-control" type="text" placeholder="${usuario.edad}" name="edad"></div>
                                                 </div>
                                             </div>
                                             <div class="form-group"><button class="btn btn-primary btn-sm" type="submit">Guardar</button></div>
@@ -230,13 +230,13 @@
                                     </div>
                                     <div class="card-body">
                                         <form>
-                                            <div class="form-group"><label for="address"><strong>Sistema</strong></label><input class="form-control" type="text" placeholder="Sunset Blvd, 38" name="sistema" disabled="" readonly=""></div>
+                                            <div class="form-group"><label for="address"><strong>Sistema</strong></label><input class="form-control" type="text" placeholder="${usuario.sistema}" name="sistema" disabled="" readonly=""></div>
                                             <div class="form-row">
                                                 <div class="col">
-                                                    <div class="form-group"><label for="city"><strong>Ip</strong></label><input class="form-control" type="text" placeholder="Los Angeles" name="ip" disabled="" readonly=""></div>
+                                                    <div class="form-group"><label for="city"><strong>Ip</strong></label><input class="form-control" type="text" placeholder="${usuario.ip}" name="ip" disabled="" readonly=""></div>
                                                 </div>
                                                 <div class="col">
-                                                    <div class="form-group"><label for="country"><strong>Ultima url acortada en:</strong><br></label><input class="form-control" type="text" placeholder="USA" name="fecha" readonly="" disabled=""></div>
+                                                    <div class="form-group"><label for="country"><strong>Ultima url acortada en:</strong><br></label><input class="form-control" type="text" placeholder="${fecha}" name="fecha" readonly="" disabled=""></div>
                                                 </div>
                                             </div>
                                         </form>
@@ -281,7 +281,7 @@ document.write("" + montharray[month] + " " + daym + ", " + year + "")
                                     <div class="form-group"><button class="btn btn-primary btn-sm" type="submit">Comentar</button></div>
                                 </form>
                             </div>
-                            <div class="col"><iframe allowfullscreen="" frameborder="0" src="https://www.google.com/maps/embed/v1/view?key=AIzaSyCkUXbBQih3qBDFhOVAf_N2hysiM-hZfsk&amp;center=-33.8569%2C151.2152&amp;zoom=11" width="100%" height="400"></iframe></div>
+                            <div class="col"><iframe allowfullscreen frameborder="0" src="https://www.google.com/maps/embed/v1/view?key=AIzaSyCkUXbBQih3qBDFhOVAf_N2hysiM-hZfsk&amp;center=19.4166700%2C++-70.7000000&amp;zoom=11" width="100%" height="400"></iframe></div>
                         </div>
                     </div>
                 </div>

@@ -2,6 +2,7 @@ package INF;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -20,7 +21,7 @@ public class UsuarioEntity {
     public String sistema;
     public String perfil;
     public Collection<ComentarioEntity> comentariosById;
-    public Collection<UrlUsuarioEntity> urlUsuariosById;
+    public List<UrlUsuarioEntity> urlUsuariosById;
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
@@ -180,7 +181,7 @@ public class UsuarioEntity {
         return urlUsuariosById;
     }
 
-    public void setUrlUsuariosById(Collection<UrlUsuarioEntity> urlUsuariosById) {
+    public void setUrlUsuariosById(List<UrlUsuarioEntity> urlUsuariosById) {
         this.urlUsuariosById = urlUsuariosById;
     }
 }

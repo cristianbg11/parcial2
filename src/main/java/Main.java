@@ -188,21 +188,42 @@ public class Main {
             }
             Query query = (Query) em.createQuery("select u from UrlUsuarioEntity u where usuarioByIdUsuario = u.usuarioByIdUsuario");
             List<UrlUsuarioEntity> urls = query.getResultList();
+            Timestamp fecha = usuario.urlUsuariosById.get(usuario.urlUsuariosById.size()-1).fecha;
             attributes.put("usuario",usuario);
             attributes.put("urls", urls);
+            attributes.put("fecha", fecha);
             return new ModelAndView(attributes, "profile.ftl");
         } , new FreeMarkerEngine());
+
 
         get("/usuarios", (request, response)-> {
             Map<String, Object> attributes = new HashMap<>();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+            if (usuario.administrador==false){
+                response.redirect("/index");
+            }
             Query query = (Query) em.createQuery("select u from UsuarioEntity u");
             List<UsuarioEntity> usuarios = query.getResultList();
             //urls.get().urlByIdUrl.code
             attributes.put("usuario",usuario);
             attributes.put("usuarios", usuarios);
             return new ModelAndView(attributes, "table.ftl");
+        } , new FreeMarkerEngine());
+
+        get("/urls", (request, response)-> {
+            Map<String, Object> attributes = new HashMap<>();
+            spark.Session session=request.session(true);
+            UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+            if (usuario.administrador==false){
+                response.redirect("/index");
+            }
+            Query query = (Query) em.createQuery("select u from UrlUsuarioEntity u");
+            List<UrlUsuarioEntity> urls = query.getResultList();
+            //urls.get().urlByIdUrl.code
+            attributes.put("usuario",usuario);
+            attributes.put("urls", urls);
+            return new ModelAndView(attributes, "urls.ftl");
         } , new FreeMarkerEngine());
 
         post("/acortar", (request, response) -> {
@@ -234,6 +255,14 @@ public class Main {
             UrlUserInsert(em, response, usuario, url);
             return "Desvio";
         });
+
+        get("/salir", (request, response)->{
+            spark.Session session=request.session(true);
+            session.invalidate();
+            response.removeCookie("CookieUsuario");
+            response.redirect("/");
+            return "Sesion finalizada";
+        }); //Finaliza Sesión
 
         get("/:code", ((request, response) -> {
             final Session sesion = getSession();
