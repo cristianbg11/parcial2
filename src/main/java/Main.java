@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import spark.ModelAndView;
 import spark.Request;
+import spark.Response;
 import spark.template.freemarker.FreeMarkerEngine;
 
 import javax.persistence.EntityManager;
@@ -90,12 +91,13 @@ public class Main {
             }
             return renderContent("publico/login.html");
         });
-
+        
         get("/visitar", (request, response)-> {
             //response.redirect("/login.html");
             final Session sesion = getSession();
             UsuarioEntity usuario = sesion.find(UsuarioEntity.class, 1);
             spark.Session session=request.session(true);
+            session.attribute("usuario", usuario);
             em.getTransaction().begin();
             usuario.setSistema(request.userAgent());
             em.merge(usuario);
@@ -166,6 +168,18 @@ public class Main {
             return new ModelAndView(attributes, "index.ftl");
         } , new FreeMarkerEngine());
 
+        get("/perfil", (request, response)-> {
+            Map<String, Object> attributes = new HashMap<>();
+            spark.Session session=request.session(true);
+            UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+            Query query = (Query) em.createQuery("select u from UrlUsuarioEntity u where usuarioByIdUsuario = u.usuarioByIdUsuario");
+            List<UrlUsuarioEntity> urls = query.getResultList();
+            //urls.get().urlByIdUrl.code
+            attributes.put("usuario",usuario);
+            attributes.put("urls", urls);
+            return new ModelAndView(attributes, "profile.ftl");
+        } , new FreeMarkerEngine());
+
         post("/acortar", (request, response) -> {
             em.getTransaction().begin();
             int n = 100000 + new Random().nextInt(900000);
@@ -181,26 +195,49 @@ public class Main {
 
         get("/desviar", (request, response) -> {
             final Session sesion = getSession();
-            Map<String, Object> attributes = new HashMap<>();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+            Map<String, Object> attributes = new HashMap<>();
             int id = Integer.parseInt(request.queryParams("id"));
             UrlEntity url = sesion.find(UrlEntity.class, id);
-            url.cantidad++;
-            em.getTransaction().begin();
-            em.merge(url);
-            em.getTransaction().commit();
-            em.getTransaction().begin();
-            UrlUsuarioEntity urlUsuario = new UrlUsuarioEntity();
-            java.util.Date date = new Date();
-            urlUsuario.fecha = new Timestamp(date.getTime());
-            urlUsuario.urlByIdUrl = url;
-            urlUsuario.usuarioByIdUsuario = usuario;
-            em.persist(urlUsuario);
-            em.getTransaction().commit();
-            response.redirect(url.url);
-            return "Usuario Creado";
+            UrlUserInsert(em, response, usuario, url);
+            return "Desvio";
         });
+
+        get("/:code", ((request, response) -> {
+            final Session sesion = getSession();
+            spark.Session session=request.session(true);
+            UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+            if (usuario==null){
+                usuario = sesion.find(UsuarioEntity.class, 1);
+            }
+            em.getTransaction().begin();
+            usuario.setSistema(request.userAgent());
+            em.merge(usuario);
+            em.getTransaction().commit();
+            String codigo = request.params("code");
+            Query<UrlEntity> query = (Query<UrlEntity>) em.createQuery("select u from UrlEntity u where u.code=:code", UrlEntity.class);
+            query.setParameter("code", codigo);
+            UrlEntity url = query.uniqueResult();
+            UrlUserInsert(em, response, usuario, url);
+            return "redirecionado";
+        }));
+    }
+
+    private static void UrlUserInsert(EntityManager em, Response response, UsuarioEntity usuario, UrlEntity url) {
+        url.cantidad++;
+        em.getTransaction().begin();
+        em.merge(url);
+        em.getTransaction().commit();
+        em.getTransaction().begin();
+        UrlUsuarioEntity urlUsuario = new UrlUsuarioEntity();
+        Date date = new Date();
+        urlUsuario.fecha = new Timestamp(date.getTime());
+        urlUsuario.urlByIdUrl = url;
+        urlUsuario.usuarioByIdUsuario = usuario;
+        em.persist(urlUsuario);
+        em.getTransaction().commit();
+        response.redirect(url.url);
     }
 
 
