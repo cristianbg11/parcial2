@@ -91,7 +91,7 @@ public class Main {
             }
             return renderContent("publico/login.html");
         });
-        
+
         get("/visitar", (request, response)-> {
             //response.redirect("/login.html");
             final Session sesion = getSession();
@@ -161,6 +161,13 @@ public class Main {
             Map<String, Object> attributes = new HashMap<>();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+            if (usuario==null){
+                final Session sesion = getSession();
+                usuario = sesion.find(UsuarioEntity.class, 1);
+                session.attribute("usuario", usuario);
+            }else {
+                session.attribute("usuario", usuario);
+            }
             Query query = (Query) em.createQuery("select u from UrlEntity u");
             List<UrlEntity> urls = query.getResultList();
             attributes.put("usuario",usuario);
@@ -172,12 +179,30 @@ public class Main {
             Map<String, Object> attributes = new HashMap<>();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+            if (usuario==null){
+                final Session sesion = getSession();
+                usuario = sesion.find(UsuarioEntity.class, 1);
+                session.attribute("usuario", usuario);
+            }else {
+                session.attribute("usuario", usuario);
+            }
             Query query = (Query) em.createQuery("select u from UrlUsuarioEntity u where usuarioByIdUsuario = u.usuarioByIdUsuario");
             List<UrlUsuarioEntity> urls = query.getResultList();
-            //urls.get().urlByIdUrl.code
             attributes.put("usuario",usuario);
             attributes.put("urls", urls);
             return new ModelAndView(attributes, "profile.ftl");
+        } , new FreeMarkerEngine());
+
+        get("/usuarios", (request, response)-> {
+            Map<String, Object> attributes = new HashMap<>();
+            spark.Session session=request.session(true);
+            UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+            Query query = (Query) em.createQuery("select u from UsuarioEntity u");
+            List<UsuarioEntity> usuarios = query.getResultList();
+            //urls.get().urlByIdUrl.code
+            attributes.put("usuario",usuario);
+            attributes.put("usuarios", usuarios);
+            return new ModelAndView(attributes, "table.ftl");
         } , new FreeMarkerEngine());
 
         post("/acortar", (request, response) -> {
@@ -197,6 +222,12 @@ public class Main {
             final Session sesion = getSession();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+            if (usuario==null){
+                usuario = sesion.find(UsuarioEntity.class, 1);
+                session.attribute("usuario", usuario);
+            }else {
+                session.attribute("usuario", usuario);
+            }
             Map<String, Object> attributes = new HashMap<>();
             int id = Integer.parseInt(request.queryParams("id"));
             UrlEntity url = sesion.find(UrlEntity.class, id);
@@ -210,6 +241,7 @@ public class Main {
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
             if (usuario==null){
                 usuario = sesion.find(UsuarioEntity.class, 1);
+                session.attribute("usuario", usuario);
             }
             em.getTransaction().begin();
             usuario.setSistema(request.userAgent());

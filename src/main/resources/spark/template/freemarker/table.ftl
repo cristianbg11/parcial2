@@ -17,13 +17,17 @@
             <div class="container-fluid d-flex flex-column p-0">
                 <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
                     <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-laugh-wink"></i></div>
-                    <div class="sidebar-brand-text mx-3"><a href="/index"><span>Acortador</span></a></div>
+                    <div class="sidebar-brand-text mx-3"><span>Acortador</span></div>
                 </a>
                 <hr class="sidebar-divider my-0">
                 <ul class="nav navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="index.ftl"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link active" href="table.ftl"><i class="fas fa-table"></i><span>Table</span></a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="blank.html"><i class="fas fa-window-maximize"></i><span>Blank Page</span></a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href="/index"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                    <#if usuario?has_content>
+                        <#if usuario.administrador == true>
+                            <li class="nav-item" role="presentation"><a class="nav-link" href="/usuarios"><i class="fas fa-table"></i><span>Usuarios</span></a></li>
+                            <li class="nav-item" role="presentation"><a class="nav-link" href="/urls"><i class="fas fa-window-maximize"></i><span>Urls</span></a></li>
+                        </#if>
+                    </#if>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
             </div>
@@ -167,99 +171,31 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td><img class="rounded-circle mr-2" width="30" height="30" src="assets/img/avatars/avatar1.jpeg">Airi Satou</td>
-                                        <td>Accountant</td>
-                                        <td>Tokyo</td>
-                                        <td>33</td>
-                                        <td>2008/11/28</td>
-                                        <td>
-                                            <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Accion</button>
-                                                <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="#">Admin</a><a class="dropdown-item" role="presentation" href="#">Eliminar</a></div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><img class="rounded-circle mr-2" width="30" height="30" src="assets/img/avatars/avatar2.jpeg">Angelica Ramos</td>
-                                        <td>Chief Executive Officer(CEO)</td>
-                                        <td>London</td>
-                                        <td>47</td>
-                                        <td>2009/10/09<br></td>
-                                        <td>$1,200,000</td>
-                                    </tr>
-                                    <tr>
-                                        <td><img class="rounded-circle mr-2" width="30" height="30" src="assets/img/avatars/avatar3.jpeg">Ashton Cox</td>
-                                        <td>Junior Technical Author</td>
-                                        <td>San Francisco</td>
-                                        <td>66</td>
-                                        <td>2009/01/12<br></td>
-                                        <td>$86,000</td>
-                                    </tr>
-                                    <tr>
-                                        <td><img class="rounded-circle mr-2" width="30" height="30" src="assets/img/avatars/avatar4.jpeg">Bradley Greer</td>
-                                        <td>Software Engineer</td>
-                                        <td>London</td>
-                                        <td>41</td>
-                                        <td>2012/10/13<br></td>
-                                        <td>$132,000</td>
-                                    </tr>
-                                    <tr>
-                                        <td><img class="rounded-circle mr-2" width="30" height="30" src="assets/img/avatars/avatar5.jpeg">Brenden Wagner</td>
-                                        <td>Software Engineer</td>
-                                        <td>San Francisco</td>
-                                        <td>28</td>
-                                        <td>2011/06/07<br></td>
-                                        <td>$206,850</td>
-                                    </tr>
-                                    <tr>
-                                        <td><img class="rounded-circle mr-2" width="30" height="30" src="assets/img/avatars/avatar1.jpeg">Brielle Williamson</td>
-                                        <td>Integration Specialist</td>
-                                        <td>New York</td>
-                                        <td>61</td>
-                                        <td>2012/12/02<br></td>
-                                        <td>$372,000</td>
-                                    </tr>
-                                    <tr>
-                                        <td><img class="rounded-circle mr-2" width="30" height="30" src="assets/img/avatars/avatar2.jpeg">Bruno Nash<br></td>
-                                        <td>Software Engineer</td>
-                                        <td>London</td>
-                                        <td>38</td>
-                                        <td>2011/05/03<br></td>
-                                        <td>$163,500</td>
-                                    </tr>
-                                    <tr>
-                                        <td><img class="rounded-circle mr-2" width="30" height="30" src="assets/img/avatars/avatar3.jpeg">Caesar Vance</td>
-                                        <td>Pre-Sales Support</td>
-                                        <td>New York</td>
-                                        <td>21</td>
-                                        <td>2011/12/12<br></td>
-                                        <td>$106,450</td>
-                                    </tr>
-                                    <tr>
-                                        <td><img class="rounded-circle mr-2" width="30" height="30" src="assets/img/avatars/avatar4.jpeg">Cara Stevens</td>
-                                        <td>Sales Assistant</td>
-                                        <td>New York</td>
-                                        <td>46</td>
-                                        <td>2011/12/06<br></td>
-                                        <td>$145,600</td>
-                                    </tr>
-                                    <tr>
-                                        <td><img class="rounded-circle mr-2" width="30" height="30" src="assets/img/avatars/avatar5.jpeg">Cedric Kelly</td>
-                                        <td>Senior JavaScript Developer</td>
-                                        <td>Edinburgh</td>
-                                        <td>22</td>
-                                        <td>2012/03/29<br></td>
-                                        <td>$433,060</td>
-                                    </tr>
+                                <#if usuarios?has_content>
+                                    <#list usuarios as user>
+                                        <tr>
+                                            <td><img class="rounded-circle mr-2" width="30" height="30" src="assets/img/avatars/avatar1.jpeg">${user.username}</td>
+                                            <td>${user.nombre}</td>
+                                            <td>${user.administrador?then('Si', 'No')}</td>
+                                            <td>${user.edad}</td>
+                                            <td>${user.ip}</td>
+                                            <td>
+                                                <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Accion</button>
+                                                    <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="#">Admin</a><a class="dropdown-item" role="presentation" href="#">Ver</a><a class="dropdown-item" role="presentation" href="#">Eliminar</a></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </#list>
+                                </#if>
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td><strong>Name</strong></td>
-                                        <td><strong>Position</strong></td>
-                                        <td><strong>Office</strong></td>
-                                        <td><strong>Age</strong></td>
-                                        <td><strong>Start date</strong></td>
-                                        <td><strong>Salary</strong></td>
+                                        <td><strong>Usuario</strong></td>
+                                        <td><strong>Nombre</strong></td>
+                                        <td><strong>Admin</strong></td>
+                                        <td><strong>Edad</strong></td>
+                                        <td><strong>Ip</strong></td>
+                                        <td><strong></strong></td>
                                     </tr>
                                 </tfoot>
                             </table>

@@ -17,13 +17,17 @@
             <div class="container-fluid d-flex flex-column p-0">
                 <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
                     <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-laugh-wink"></i></div>
-                    <div class="sidebar-brand-text mx-3"><a href="/index"><span>Acortador</span></a></div>
+                    <div class="sidebar-brand-text mx-3"><span>Acortador</span></div>
                 </a>
                 <hr class="sidebar-divider my-0">
                 <ul class="nav navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="index.ftl"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="table.ftl"><i class="fas fa-table"></i><span>Table</span></a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="blank.html"><i class="fas fa-window-maximize"></i><span>Blank Page</span></a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href="/index"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                    <#if usuario?has_content>
+                        <#if usuario.administrador == true>
+                            <li class="nav-item" role="presentation"><a class="nav-link" href="/usuarios"><i class="fas fa-table"></i><span>Usuarios</span></a></li>
+                            <li class="nav-item" role="presentation"><a class="nav-link" href="/urls"><i class="fas fa-window-maximize"></i><span>Urls</span></a></li>
+                        </#if>
+                    </#if>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
             </div>
