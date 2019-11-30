@@ -7,20 +7,20 @@ import java.util.Objects;
 @Entity
 @Table(name = "USUARIO", schema = "PUBLIC", catalog = "ACORTADOR")
 public class UsuarioEntity {
-    private int id;
-    private String nombre;
-    private String username;
-    private String password;
-    private Boolean administrador;
-    private String email;
-    private Integer edad;
-    private String longitud;
-    private String latitud;
-    private String ip;
-    private String sistema;
-    private String perfil;
-    private Collection<ComentarioEntity> comentariosById;
-    private Collection<UrlUsuarioEntity> urlUsuariosById;
+    public int id;
+    public String nombre;
+    public String username;
+    public String password;
+    public Boolean administrador;
+    public String email;
+    public Integer edad;
+    public String longitud;
+    public String latitud;
+    public String ip;
+    public String sistema;
+    public String perfil;
+    public Collection<ComentarioEntity> comentariosById;
+    public Collection<UrlUsuarioEntity> urlUsuariosById;
 
     @Id
     @Column(name = "ID", nullable = false)
