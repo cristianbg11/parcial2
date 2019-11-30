@@ -181,7 +181,7 @@
                                             <td>${user.ip}</td>
                                             <td>
                                                 <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Accion</button>
-                                                    <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="#">Admin</a><a class="dropdown-item" role="presentation" href="#">Ver</a><a class="dropdown-item" role="presentation" href="#">Eliminar</a></div>
+                                                    <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="update?id_user=${user.id}">Admin</a><a class="dropdown-item" role="presentation" href="#">Ver</a><a class="dropdown-item" role="presentation" href="deleteuser?id_user=${user.id}">Eliminar</a></div>
                                                 </div>
                                             </td>
                                         </tr>

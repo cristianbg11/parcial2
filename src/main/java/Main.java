@@ -276,6 +276,30 @@ public class Main {
             response.redirect("/urls");
             return "Url Borrado";
         });
+
+        get("/deleteuser", (request, response)-> {
+            final Session sesion = getSession();
+            int id = Integer.parseInt(request.queryParams("id_user"));
+            UsuarioEntity usuario = sesion.find(UsuarioEntity.class, id);
+            sesion.getTransaction().begin();
+            sesion.remove(usuario);
+            sesion.getTransaction().commit();
+            response.redirect("/usuarios");
+            return "Url Borrado";
+        });
+
+        post("/update", (request, response)-> {
+            final Session sesion = getSession();
+            int id = Integer.parseInt(request.queryParams("id_user"));
+            UsuarioEntity usuario = sesion.find(UsuarioEntity.class, id);
+            em.getTransaction().begin();
+            usuario.setAdministrador(true);
+            em.merge(usuario);
+            em.getTransaction().commit();
+            response.redirect("/usuarios");
+            return "Usuario Actualizado";
+        });
+
         get("/stats", (request, response)-> {
             final Session sesion = getSession();
             Map<String, Object> attributes = new HashMap<>();
@@ -286,6 +310,9 @@ public class Main {
                 session.attribute("usuario", usuario);
             }else {
                 session.attribute("usuario", usuario);
+            }
+            if (usuario.administrador==false){
+                response.redirect("/index");
             }
             int id = Integer.parseInt(request.queryParams("id_url"));
             UrlEntity url = sesion.find(UrlEntity.class, id);

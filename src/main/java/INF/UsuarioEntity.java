@@ -176,8 +176,8 @@ public class UsuarioEntity {
         this.comentariosById = comentariosById;
     }
 
-    @OneToMany(mappedBy = "usuarioByIdUsuario", cascade = CascadeType.ALL)
-    public Collection<UrlUsuarioEntity> getUrlUsuariosById() {
+    @OneToMany(mappedBy = "usuarioByIdUsuario")
+    public List<UrlUsuarioEntity> getUrlUsuariosById() {
         return urlUsuariosById;
     }
 
