@@ -238,7 +238,7 @@ public class Main {
             response.redirect("/index");
             return "Usuario Creado";
         });
-
+        /*
         get("/desviar", (request, response) -> {
             final Session sesion = getSession();
             spark.Session session=request.session(true);
@@ -255,6 +255,7 @@ public class Main {
             UrlUserInsert(em, response, usuario, url);
             return "Desvio";
         });
+        */
 
         get("/salir", (request, response)->{
             spark.Session session=request.session(true);
@@ -283,6 +284,21 @@ public class Main {
             UrlUserInsert(em, response, usuario, url);
             return "redirecionado";
         }));
+
+        get("/stats", (request, response)-> {
+            Map<String, Object> attributes = new HashMap<>();
+            spark.Session session=request.session(true);
+            UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+            if (usuario==null){
+                final Session sesion = getSession();
+                usuario = sesion.find(UsuarioEntity.class, 1);
+                session.attribute("usuario", usuario);
+            }else {
+                session.attribute("usuario", usuario);
+            }
+            attributes.put("usuario",usuario);
+            return new ModelAndView(attributes, "blank.ftl");
+        } , new FreeMarkerEngine());
     }
 
     private static void UrlUserInsert(EntityManager em, Response response, UsuarioEntity usuario, UrlEntity url) {
