@@ -186,7 +186,8 @@ public class Main {
             }else {
                 session.attribute("usuario", usuario);
             }
-            Query query = (Query) em.createQuery("select u from UrlUsuarioEntity u where usuarioByIdUsuario = u.usuarioByIdUsuario");
+            Query query = (Query) em.createQuery("select u from UrlUsuarioEntity u where u.usuarioByIdUsuario = :user");
+            query.setParameter("user", usuario);
             List<UrlUsuarioEntity> urls = query.getResultList();
             Timestamp fecha = usuario.urlUsuariosById.get(usuario.urlUsuariosById.size()-1).fecha;
             attributes.put("usuario",usuario);
@@ -265,6 +266,38 @@ public class Main {
             return "Sesion finalizada";
         }); //Finaliza Sesión
 
+        get("/delete", (request, response)-> {
+            final Session sesion = getSession();
+            int id = Integer.parseInt(request.queryParams("id_url"));
+            UrlEntity url = sesion.find(UrlEntity.class, id);
+            sesion.getTransaction().begin();
+            sesion.remove(url);
+            sesion.getTransaction().commit();
+            response.redirect("/urls");
+            return "Url Borrado";
+        });
+        get("/stats", (request, response)-> {
+            final Session sesion = getSession();
+            Map<String, Object> attributes = new HashMap<>();
+            spark.Session session=request.session(true);
+            UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+            if (usuario==null){
+                usuario = sesion.find(UsuarioEntity.class, 1);
+                session.attribute("usuario", usuario);
+            }else {
+                session.attribute("usuario", usuario);
+            }
+            int id = Integer.parseInt(request.queryParams("id_url"));
+            UrlEntity url = sesion.find(UrlEntity.class, id);
+            Query query = (Query) em.createQuery("select u from UrlUsuarioEntity u where u.urlByIdUrl = :url");
+            query.setParameter("url", url);
+            List<UrlUsuarioEntity> urlusers = query.getResultList();
+            attributes.put("urlusers", urlusers);
+            attributes.put("url",url);
+            attributes.put("usuario",usuario);
+            return new ModelAndView(attributes, "blank.ftl");
+        } , new FreeMarkerEngine());
+
         get("/:code", ((request, response) -> {
             final Session sesion = getSession();
             spark.Session session=request.session(true);
@@ -284,21 +317,6 @@ public class Main {
             UrlUserInsert(em, response, usuario, url);
             return "redirecionado";
         }));
-
-        get("/stats", (request, response)-> {
-            Map<String, Object> attributes = new HashMap<>();
-            spark.Session session=request.session(true);
-            UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
-            if (usuario==null){
-                final Session sesion = getSession();
-                usuario = sesion.find(UsuarioEntity.class, 1);
-                session.attribute("usuario", usuario);
-            }else {
-                session.attribute("usuario", usuario);
-            }
-            attributes.put("usuario",usuario);
-            return new ModelAndView(attributes, "blank.ftl");
-        } , new FreeMarkerEngine());
     }
 
     private static void UrlUserInsert(EntityManager em, Response response, UsuarioEntity usuario, UrlEntity url) {

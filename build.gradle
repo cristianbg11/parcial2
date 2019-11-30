@@ -1,6 +1,18 @@
-plugins {
-    id 'java'
+buildscript {
+    ext {
+        springBootVersion = '2.1.2.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
 }
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 
 version '1.0-SNAPSHOT'
 
@@ -33,3 +45,6 @@ dependencies {
     //compile 'org.webjars:bootstrap:3.3.6', //existe un bug que no permite varias rutas, están metiendo mano.
     compile "org.slf4j:slf4j-simple:1.7.21"
 }
+
+task stage(dependsOn: ['build', 'clean'])
+build.mustRunAfter clean

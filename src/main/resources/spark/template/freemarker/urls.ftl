@@ -174,10 +174,10 @@
                                     <#list urls as url>
                                         <tr>
                                             <td>localhost:8080/${url.urlByIdUrl.code}</td>
-                                            <td>${url.urlByIdUrl.url[0..70]}</td>
+                                            <td>${url.urlByIdUrl.url}</td>
                                             <td class="text-center">${url.urlByIdUrl.cantidad}</td>
                                             <td>${url.fecha}</td>
-                                            <td><button class="btn btn-primary" type="button">Eliminar</button></td>
+                                            <td><a href="delete?id_url=${url.urlByIdUrl.id}"><button class="btn btn-primary" type="button">Eliminar</button></a></td>
                                         </tr>
                                     </#list>
                                 </#if>
@@ -187,7 +187,7 @@
                                         <td><strong>Acortado</strong></td>
                                         <td><strong>url</strong></td>
                                         <td><strong>Visitas</strong></td>
-                                        <td><strong>Fecha</strong></td>
+                                        <td class="text-center"><strong>Fecha</strong></td>
                                         <td><strong></strong></td>
                                     </tr>
                                 </tfoot>
