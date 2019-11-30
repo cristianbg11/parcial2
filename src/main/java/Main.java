@@ -48,9 +48,21 @@ public class Main {
 
         staticFiles.location("/publico");
         EntityManager em = getSession();
+        InetAddress ip = InetAddress.getLocalHost();
 
         if (secion.find(UsuarioEntity.class, 0)==null){
+            UsuarioEntity anonimo = new UsuarioEntity();
+            anonimo.nombre = "Anonimo";
+            anonimo.username = "anonimo";
+            anonimo.password = "1234";
+            anonimo.administrador = false;
+            anonimo.email ="anonimo@gmail.com";
+            anonimo.edad = 0;
+            anonimo.ip = ip.getHostAddress();
+            anonimo.sistema = req.userAgent();
             em.getTransaction().begin();
+            em.persist(anonimo);
+            em.getTransaction().commit();
             UsuarioEntity admin = new UsuarioEntity();
             admin.nombre = "Cristian";
             admin.username = "admin";
@@ -58,9 +70,9 @@ public class Main {
             admin.administrador = true;
             admin.email ="cristianbg011@gmail.com";
             admin.edad = 22;
-            InetAddress ip = InetAddress.getLocalHost();
             admin.ip = ip.getHostAddress();
             admin.sistema = req.userAgent();
+            em.getTransaction().begin();
             em.persist(admin);
             em.getTransaction().commit();
         }

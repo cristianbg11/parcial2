@@ -22,7 +22,7 @@ public class UsuarioEntity {
     public Collection<ComentarioEntity> comentariosById;
     public Collection<UrlUsuarioEntity> urlUsuariosById;
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
     public int getId() {
         return id;
@@ -166,7 +166,7 @@ public class UsuarioEntity {
         return Objects.hash(id, nombre, username, password, administrador, email, edad, longitud, latitud, ip, sistema, perfil);
     }
 
-    @OneToMany(mappedBy = "usuarioByIdUsuario")
+    @OneToMany(mappedBy = "usuarioByIdUsuario", cascade = CascadeType.ALL)
     public Collection<ComentarioEntity> getComentariosById() {
         return comentariosById;
     }
@@ -175,7 +175,7 @@ public class UsuarioEntity {
         this.comentariosById = comentariosById;
     }
 
-    @OneToMany(mappedBy = "usuarioByIdUsuario")
+    @OneToMany(mappedBy = "usuarioByIdUsuario", cascade = CascadeType.ALL)
     public Collection<UrlUsuarioEntity> getUrlUsuariosById() {
         return urlUsuariosById;
     }

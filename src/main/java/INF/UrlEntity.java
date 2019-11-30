@@ -13,7 +13,7 @@ public class UrlEntity {
     private Integer cantidad;
     private Collection<UrlUsuarioEntity> urlUsuariosById;
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
     public int getId() {
         return id;
@@ -69,7 +69,7 @@ public class UrlEntity {
         return Objects.hash(id, code, url, cantidad);
     }
 
-    @OneToMany(mappedBy = "urlByIdUrl")
+    @OneToMany(mappedBy = "urlByIdUrl", cascade = CascadeType.ALL)
     public Collection<UrlUsuarioEntity> getUrlUsuariosById() {
         return urlUsuariosById;
     }

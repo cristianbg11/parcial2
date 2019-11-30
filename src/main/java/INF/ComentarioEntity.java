@@ -11,7 +11,7 @@ public class ComentarioEntity {
     private String username;
     private UsuarioEntity usuarioByIdUsuario;
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
     public int getId() {
         return id;
