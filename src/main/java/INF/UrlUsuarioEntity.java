@@ -7,10 +7,10 @@ import java.util.Objects;
 @Entity
 @Table(name = "URL_USUARIO", schema = "PUBLIC", catalog = "ACORTADOR")
 public class UrlUsuarioEntity {
-    private int id;
-    private Timestamp fecha;
-    private UsuarioEntity usuarioByIdUsuario;
-    private UrlEntity urlByIdUrl;
+    public int id;
+    public Timestamp fecha;
+    public UsuarioEntity usuarioByIdUsuario;
+    public UrlEntity urlByIdUrl;
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)

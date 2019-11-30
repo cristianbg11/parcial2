@@ -5,7 +5,9 @@ import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import spark.ModelAndView;
 import spark.Request;
+import spark.template.freemarker.FreeMarkerEngine;
 
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.EntityType;
@@ -18,14 +20,13 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
+import java.sql.Timestamp;
+import java.util.*;
 
 import static spark.Spark.*;
 
 public class Main {
     private static final SessionFactory ourSessionFactory;
-    private static Request req;
 
     static {
         try {
@@ -50,7 +51,7 @@ public class Main {
         EntityManager em = getSession();
         InetAddress ip = InetAddress.getLocalHost();
 
-        if (secion.find(UsuarioEntity.class, 0)==null){
+        if (secion.find(UsuarioEntity.class, 1)==null){
             UsuarioEntity anonimo = new UsuarioEntity();
             anonimo.nombre = "Anonimo";
             anonimo.username = "anonimo";
@@ -59,7 +60,7 @@ public class Main {
             anonimo.email ="anonimo@gmail.com";
             anonimo.edad = 0;
             anonimo.ip = ip.getHostAddress();
-            anonimo.sistema = req.userAgent();
+            //anonimo.sistema = req.userAgent();
             em.getTransaction().begin();
             em.persist(anonimo);
             em.getTransaction().commit();
@@ -71,7 +72,7 @@ public class Main {
             admin.email ="cristianbg011@gmail.com";
             admin.edad = 22;
             admin.ip = ip.getHostAddress();
-            admin.sistema = req.userAgent();
+            //admin.sistema = req.userAgent();
             em.getTransaction().begin();
             em.persist(admin);
             em.getTransaction().commit();
@@ -90,6 +91,20 @@ public class Main {
             return renderContent("publico/login.html");
         });
 
+        get("/visitar", (request, response)-> {
+            //response.redirect("/login.html");
+            final Session sesion = getSession();
+            UsuarioEntity usuario = sesion.find(UsuarioEntity.class, 1);
+            spark.Session session=request.session(true);
+            em.getTransaction().begin();
+            usuario.setSistema(request.userAgent());
+            em.merge(usuario);
+            em.getTransaction().commit();
+            session.attribute("usuario", usuario);
+            response.redirect("/index");
+            return "anonimo";
+        });
+
         post("/sesion", (request, response)-> {
             List<UsuarioEntity> users = em.createQuery("select u from UsuarioEntity u", UsuarioEntity.class).getResultList();
             String username = request.queryParams("user");
@@ -99,6 +114,10 @@ public class Main {
             for(UsuarioEntity usuario : users){
                 if (usuario.username.equals(username) && usuario.password.equals(password)){
                     session.attribute("usuario", usuario);
+                    em.getTransaction().begin();
+                    usuario.setSistema(request.userAgent());
+                    em.merge(usuario);
+                    em.getTransaction().commit();
                     if (request.queryParams("recordatorio") !=null && request.queryParams("recordatorio").equals("si") ){
                         Map<String, String> cookies=request.cookies();
                         response.cookie("/", "CookieUsuario", String.valueOf(usuario.id), 604800, true);
@@ -119,7 +138,71 @@ public class Main {
             return 0;
         });
 
+        post("/insertar", (request, response) -> {
+            em.getTransaction().begin();
+            UsuarioEntity usuario = new UsuarioEntity();
+            usuario.username = request.queryParams("username");
+            usuario.nombre = request.queryParams("nombre");
+            usuario.password = request.queryParams("password");
+            usuario.administrador = Boolean.parseBoolean(request.queryParams("administrador"));
+            usuario.email = request.queryParams("email");
+            usuario.edad = Integer.valueOf(request.queryParams("edad"));
+            usuario.ip = ip.getHostAddress();
+            usuario.sistema = request.userAgent();
+            em.persist(usuario);
+            em.getTransaction().commit();
+            response.redirect("/");
+            return "Usuario Creado";
+        }); // Crea un usuario
+
+        get("/index", (request, response)-> {
+            Map<String, Object> attributes = new HashMap<>();
+            spark.Session session=request.session(true);
+            UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+            Query query = (Query) em.createQuery("select u from UrlEntity u");
+            List<UrlEntity> urls = query.getResultList();
+            attributes.put("usuario",usuario);
+            attributes.put("urls", urls);
+            return new ModelAndView(attributes, "index.ftl");
+        } , new FreeMarkerEngine());
+
+        post("/acortar", (request, response) -> {
+            em.getTransaction().begin();
+            int n = 100000 + new Random().nextInt(900000);
+            UrlEntity url = new UrlEntity();
+            url.code = idToShortURL(n);
+            url.url = request.queryParams("url");
+            url.cantidad = 0;
+            em.persist(url);
+            em.getTransaction().commit();
+            response.redirect("/index");
+            return "Usuario Creado";
+        });
+
+        get("/desviar", (request, response) -> {
+            final Session sesion = getSession();
+            Map<String, Object> attributes = new HashMap<>();
+            spark.Session session=request.session(true);
+            UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+            int id = Integer.parseInt(request.queryParams("id"));
+            UrlEntity url = sesion.find(UrlEntity.class, id);
+            url.cantidad++;
+            em.getTransaction().begin();
+            em.merge(url);
+            em.getTransaction().commit();
+            em.getTransaction().begin();
+            UrlUsuarioEntity urlUsuario = new UrlUsuarioEntity();
+            java.util.Date date = new Date();
+            urlUsuario.fecha = new Timestamp(date.getTime());
+            urlUsuario.urlByIdUrl = url;
+            urlUsuario.usuarioByIdUsuario = usuario;
+            em.persist(urlUsuario);
+            em.getTransaction().commit();
+            response.redirect(url.url);
+            return "Usuario Creado";
+        });
     }
+
 
     private static String renderContent(String htmlFile) throws IOException, URISyntaxException {
         URL url = Main.class.getResource(htmlFile);
@@ -174,9 +257,5 @@ public class Main {
                 id = id * 62 + shortURL.charAt(i) - '0' + 52;
         }
         return id;
-    }
-
-    public static void setReq(Request req) {
-        Main.req = req;
     }
 }

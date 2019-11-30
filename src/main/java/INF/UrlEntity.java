@@ -7,11 +7,11 @@ import java.util.Objects;
 @Entity
 @Table(name = "URL", schema = "PUBLIC", catalog = "ACORTADOR")
 public class UrlEntity {
-    private int id;
-    private String code;
-    private String url;
-    private Integer cantidad;
-    private Collection<UrlUsuarioEntity> urlUsuariosById;
+    public int id;
+    public String code;
+    public String url;
+    public Integer cantidad;
+    public Collection<UrlUsuarioEntity> urlUsuariosById;
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)

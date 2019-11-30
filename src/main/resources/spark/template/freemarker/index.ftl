@@ -21,7 +21,7 @@
                 </a>
                 <hr class="sidebar-divider my-0">
                 <ul class="nav navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item" role="presentation"><a class="nav-link active" href="index.ftl"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href="/index"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
                     <li class="nav-item" role="presentation"><a class="nav-link" href="table.ftl"><i class="fas fa-table"></i><span>Table</span></a></li>
                     <li class="nav-item" role="presentation"><a class="nav-link" href="blank.html"><i class="fas fa-window-maximize"></i><span>Blank Page</span></a></li>
                 </ul>
@@ -138,10 +138,10 @@
             <div class="container-fluid text-center">
                 <div class="d-sm-flex justify-content-between align-items-center mb-4">
                     <h3 class="text-dark mb-0">Dashboard</h3><a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="#"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a></div>
-                <form class="search-form">
+                <form class="search-form" action="/acortar" method="POST">
                     <div class="input-group">
-                        <div class="input-group-prepend"></div><input class="form-control" type="text" placeholder="Inserte url">
-                        <div class="input-group-append"><button class="btn btn-light" type="button">Acortar</button></div>
+                        <div class="input-group-prepend"></div><input class="form-control" type="text" placeholder="Inserte url" name="url">
+                        <button class="btn btn-light">Acortar</button>
                     </div>
                 </form>
                 <div class="table-responsive" style="margin-bottom: 15px;">
@@ -150,11 +150,14 @@
                             <tr></tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="text-left"><a href="#">Link</a></td>
-                                <td class="text-right"><a href="#">Link</a></td>
-                            </tr>
-                            <tr></tr>
+                        <#if urls?has_content>
+                            <#list urls as url>
+                                <tr>
+                                    <td class="text-left"><a href="/desviar?id=${url.id}"  target="_blank">${url.url[0..70]}</a></td>
+                                    <td class="text-right"><a href="/desviar?id=${url.id}" target="_blank">localhost:8080/${url.code}</a></td>
+                                </tr>
+                            </#list>
+                        </#if>
                         </tbody>
                     </table>
                 </div>
