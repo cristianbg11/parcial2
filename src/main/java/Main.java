@@ -321,10 +321,10 @@ public class Main {
             }
             int id = Integer.parseInt(request.queryParams("id_url"));
             UrlEntity url = sesion.find(UrlEntity.class, id);
-            Query query = (Query) em.createQuery("select u from AccesoEntity u where u.urlByIdUrl = :url");
+            Query query = (Query) em.createQuery("select a from AccesoEntity a where a.urlByIdUrl = :url");
             query.setParameter("url", url);
-            List<AccesoEntity> urlusers = query.getResultList();
-            attributes.put("urlusers", urlusers);
+            List<AccesoEntity> accesos = query.getResultList();
+            attributes.put("accesos", accesos);
             attributes.put("url",url);
             attributes.put("usuario",usuario);
             return new ModelAndView(attributes, "blank.ftl");

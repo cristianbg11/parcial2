@@ -170,7 +170,7 @@
                                             </#if>
                                         </a>
                                     </td>
-                                    <td class="text-right"><a href="/r/${url.code}" target="_blank">localhost:8080/r/${url.code}</a><a href="/stats?id_url=${url.id}"><i class="fas fa-laugh-wink" style="margin-left: 5px;"></i></a> </td>
+                                    <td class="text-right"><a href="/r/${url.code}" target="_blank">localhost:8080/r/${url.code}</a></td>
                                 </tr>
                             </#list>
                         </#if>

@@ -145,7 +145,32 @@
             </nav>
             <div class="container-fluid">
                 <h3 class="text-dark mb-1">Estadisticas</h3>
+                <h5 class="text-dark mb-1">localhost:8080/r/${url.code}</h5>
             </div>
+                <table id="example" class="table table-striped table-bordered" width="100%">
+                    <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Ip</th>
+                        <th>Navegador</th>
+                        <th>Sistema</th>
+                        <th>Fecha</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <#if accesos?has_content>
+                        <#list accesos as acceso>
+                            <tr>
+                                <td>${acceso.usuarioByIdUsuario.username}</td>
+                                <td>${acceso.ip}</td>
+                                <td>${acceso.navegador}</td>
+                                <td>${acceso.sistema}</td>
+                                <td>${acceso.fecha}</td>
+                            </tr>
+                        </#list>
+                    </#if>
+                    </tbody>
+                </table>
             <div class="row">
                 <div class="col-lg-7 col-xl-8">
                     <div class="card shadow mb-4">
