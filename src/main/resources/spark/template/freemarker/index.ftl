@@ -161,8 +161,16 @@
                         <#if urls?has_content>
                             <#list urls as url>
                                 <tr>
-                                    <td class="text-left"><a href="/${url.code}"  target="_blank">${url.url}</a></td>
-                                    <td class="text-right"><a href="/${url.code}" target="_blank">localhost:8080/${url.code}</a><a href="/stats?id_url=${url.id}"><i class="fas fa-laugh-wink" style="margin-left: 5px;"></i></a> </td>
+                                    <td class="text-left">
+                                        <a href="/r/${url.code}"  target="_blank">
+                                            <#if url.url?length gt 70>
+                                                ${url.url[0..70]}
+                                            <#else>
+                                                ${url.url}
+                                            </#if>
+                                        </a>
+                                    </td>
+                                    <td class="text-right"><a href="/r/${url.code}" target="_blank">localhost:8080/r/${url.code}</a><a href="/stats?id_url=${url.id}"><i class="fas fa-laugh-wink" style="margin-left: 5px;"></i></a> </td>
                                 </tr>
                             </#list>
                         </#if>

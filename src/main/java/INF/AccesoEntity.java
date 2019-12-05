@@ -11,6 +11,9 @@ public class AccesoEntity {
     public Timestamp fecha;
     public UsuarioEntity usuarioByIdUsuario;
     public UrlEntity urlByIdUrl;
+    public String navegador;
+    public String ip;
+    public String sistema;
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
@@ -32,18 +35,51 @@ public class AccesoEntity {
         this.fecha = fecha;
     }
 
+    @Basic
+    @Column(name = "NAVEGADOR", nullable = true, length = 255)
+    public String getNavegador() {
+        return navegador;
+    }
+
+    public void setNavegador(String navegador) {
+        this.navegador = navegador;
+    }
+
+    @Basic
+    @Column(name = "IP", nullable = true, length = 50)
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    @Basic
+    @Column(name = "SISTEMA", nullable = true, length = 255)
+    public String getSistema() {
+        return sistema;
+    }
+
+    public void setSistema(String sistema) {
+        this.sistema = sistema;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AccesoEntity that = (AccesoEntity) o;
         return id == that.id &&
-                Objects.equals(fecha, that.fecha);
+                Objects.equals(fecha, that.fecha) &&
+                Objects.equals(navegador, that.navegador) &&
+                Objects.equals(ip, that.ip) &&
+                Objects.equals(sistema, that.sistema);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fecha);
+        return Objects.hash(id, fecha, navegador, ip, sistema);
     }
 
     @ManyToOne

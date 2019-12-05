@@ -1,4 +1,6 @@
 import INF.*;
+import eu.bitwalker.useragentutils.Browser;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.h2.tools.Server;
 import org.hibernate.HibernateException;
 import org.hibernate.query.Query;
@@ -6,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import spark.ModelAndView;
+import spark.Request;
 import spark.Response;
 import spark.template.freemarker.FreeMarkerEngine;
 
@@ -42,11 +45,11 @@ public class Main {
     public static Session getSession() throws HibernateException {
         return ourSessionFactory.openSession();
     }
-
+    public static ArrayList<UrlEntity> urlList = new ArrayList<UrlEntity>();
     public static void main(final String[] args) throws Exception {
         Class.forName("org.h2.Driver");
         port(getHerokuAssignedPort());
-        startDb();
+        //startDb();
         final Session secion = getSession();
         staticFiles.location("/publico");
         EntityManager em = getSession();
@@ -60,7 +63,7 @@ public class Main {
             anonimo.administrador = false;
             anonimo.email ="anonimo@gmail.com";
             anonimo.edad = 0;
-            anonimo.ip = ip.getHostAddress();
+            //anonimo.ip = ip.getHostAddress();
             //anonimo.sistema = req.userAgent();
             em.getTransaction().begin();
             em.persist(anonimo);
@@ -72,7 +75,7 @@ public class Main {
             admin.administrador = true;
             admin.email ="cristianbg011@gmail.com";
             admin.edad = 22;
-            admin.ip = ip.getHostAddress();
+            //admin.ip = ip.getHostAddress();
             //admin.sistema = req.userAgent();
             em.getTransaction().begin();
             em.persist(admin);
@@ -98,10 +101,6 @@ public class Main {
             UsuarioEntity usuario = sesion.find(UsuarioEntity.class, 1);
             spark.Session session=request.session(true);
             session.attribute("usuario", usuario);
-            em.getTransaction().begin();
-            usuario.setSistema(request.userAgent());
-            em.merge(usuario);
-            em.getTransaction().commit();
             session.attribute("usuario", usuario);
             response.redirect("/index");
             return "anonimo";
@@ -116,10 +115,6 @@ public class Main {
             for(UsuarioEntity usuario : users){
                 if (usuario.username.equals(username) && usuario.password.equals(password)){
                     session.attribute("usuario", usuario);
-                    em.getTransaction().begin();
-                    usuario.setSistema(request.userAgent());
-                    em.merge(usuario);
-                    em.getTransaction().commit();
                     if (request.queryParams("recordatorio") !=null && request.queryParams("recordatorio").equals("si") ){
                         Map<String, String> cookies=request.cookies();
                         response.cookie("/", "CookieUsuario", String.valueOf(usuario.id), 604800, true);
@@ -149,8 +144,6 @@ public class Main {
             usuario.administrador = Boolean.parseBoolean(request.queryParams("administrador"));
             usuario.email = request.queryParams("email");
             usuario.edad = Integer.valueOf(request.queryParams("edad"));
-            usuario.ip = ip.getHostAddress();
-            usuario.sistema = request.userAgent();
             em.persist(usuario);
             em.getTransaction().commit();
             response.redirect("/");
@@ -165,14 +158,16 @@ public class Main {
                 final Session sesion = getSession();
                 usuario = sesion.find(UsuarioEntity.class, 1);
                 session.attribute("usuario", usuario);
-            }else {
+            } else if (usuario.id==1){
+                attributes.put("urls",urlList);
+            } else {
                 session.attribute("usuario", usuario);
+                Query query = (Query) em.createQuery("select u from UrlEntity u where u.usuarioByIdUsuario=:user");
+                query.setParameter("user", usuario);
+                List<UrlEntity> urls = query.getResultList();
+                attributes.put("usuario",usuario);
+                attributes.put("urls", urls);
             }
-            Query query = (Query) em.createQuery("select u from UrlEntity u where u.usuarioByIdUsuario=:user");
-            query.setParameter("user", usuario);
-            List<UrlEntity> urls = query.getResultList();
-            attributes.put("usuario",usuario);
-            attributes.put("urls", urls);
             return new ModelAndView(attributes, "index.ftl");
         } , new FreeMarkerEngine());
 
@@ -187,13 +182,13 @@ public class Main {
             }else {
                 session.attribute("usuario", usuario);
             }
-            Query query = (Query) em.createQuery("select u from AccesoEntity u where u.usuarioByIdUsuario = :user");
+            Query query = (Query) em.createQuery("select a from AccesoEntity a where a.usuarioByIdUsuario = :user");
             query.setParameter("user", usuario);
             List<AccesoEntity> urls = query.getResultList();
-            Timestamp fecha = usuario.accesosById.get(usuario.accesosById.size()-1).fecha;
+            //Timestamp fecha = usuario.accesosById.get(usuario.accesosById.size()-1).fecha;
             attributes.put("usuario",usuario);
             attributes.put("urls", urls);
-            attributes.put("fecha", fecha);
+            //attributes.put("fecha", fecha);
             return new ModelAndView(attributes, "profile.ftl");
         } , new FreeMarkerEngine());
 
@@ -202,12 +197,18 @@ public class Main {
             Map<String, Object> attributes = new HashMap<>();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+            if (usuario==null){
+                final Session sesion = getSession();
+                usuario = sesion.find(UsuarioEntity.class, 1);
+                session.attribute("usuario", usuario);
+            }else {
+                session.attribute("usuario", usuario);
+            }
             if (usuario.administrador==false){
                 response.redirect("/index");
             }
             Query query = (Query) em.createQuery("select u from UsuarioEntity u");
             List<UsuarioEntity> usuarios = query.getResultList();
-            //urls.get().urlByIdUrl.code
             attributes.put("usuario",usuario);
             attributes.put("usuarios", usuarios);
             return new ModelAndView(attributes, "table.ftl");
@@ -217,52 +218,55 @@ public class Main {
             Map<String, Object> attributes = new HashMap<>();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+            if (usuario==null){
+                final Session sesion = getSession();
+                usuario = sesion.find(UsuarioEntity.class, 1);
+                session.attribute("usuario", usuario);
+            }else {
+                session.attribute("usuario", usuario);
+            }
             if (usuario.administrador==false){
                 response.redirect("/index");
             }
             Query query = (Query) em.createQuery("select u from UrlEntity u");
             List<AccesoEntity> urls = query.getResultList();
-            //urls.get().urlByIdUrl.code
             attributes.put("usuario",usuario);
             attributes.put("urls", urls);
             return new ModelAndView(attributes, "urls.ftl");
         } , new FreeMarkerEngine());
 
         post("/acortar", (request, response) -> {
-            em.getTransaction().begin();
-            int n = 100000 + new Random().nextInt(900000);
-            UrlEntity url = new UrlEntity();
-            url.code = idToShortURL(n);
-            url.url = request.queryParams("url");
-            url.cantidad = 0;
-            em.persist(url);
-            em.getTransaction().commit();
+            if (request.queryParams("url").equals("")) {
+                response.redirect("/index");
+            } else {
+                spark.Session session=request.session(true);
+                UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+                em.getTransaction().begin();
+                int n = 100000 + new Random().nextInt(900000);
+                UrlEntity url = new UrlEntity();
+                url.code = idToShortURL(n);
+                url.url = request.queryParams("url");
+                url.cantidad = 0;
+                url.usuarioByIdUsuario = usuario;
+                Date date = new Date();
+                url.fecha = new Timestamp(date.getTime());
+                session.attribute("url", url);
+                em.persist(url);
+                em.getTransaction().commit();
+                if(usuario.id==1){
+                    urlList.add(url);
+                    session.attribute("urls", urlList);
+                }
+            }
             response.redirect("/index");
             return "Usuario Creado";
         });
-        /*
-        get("/desviar", (request, response) -> {
-            final Session sesion = getSession();
-            spark.Session session=request.session(true);
-            UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
-            if (usuario==null){
-                usuario = sesion.find(UsuarioEntity.class, 1);
-                session.attribute("usuario", usuario);
-            }else {
-                session.attribute("usuario", usuario);
-            }
-            Map<String, Object> attributes = new HashMap<>();
-            int id = Integer.parseInt(request.queryParams("id"));
-            UrlEntity url = sesion.find(UrlEntity.class, id);
-            UrlUserInsert(em, response, usuario, url);
-            return "Desvio";
-        });
-        */
 
         get("/salir", (request, response)->{
             spark.Session session=request.session(true);
             session.invalidate();
             response.removeCookie("CookieUsuario");
+            urlList.clear();
             response.redirect("/");
             return "Sesion finalizada";
         }); //Finaliza Sesión
@@ -326,39 +330,48 @@ public class Main {
             return new ModelAndView(attributes, "blank.ftl");
         } , new FreeMarkerEngine());
 
-        get("/:code", ((request, response) -> {
-            final Session sesion = getSession();
-            spark.Session session=request.session(true);
-            UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
-            if (usuario==null){
-                usuario = sesion.find(UsuarioEntity.class, 1);
-                session.attribute("usuario", usuario);
-            }
-            em.getTransaction().begin();
-            usuario.setSistema(request.userAgent());
-            em.merge(usuario);
-            em.getTransaction().commit();
-            String codigo = request.params("code");
-            Query<UrlEntity> query = (Query<UrlEntity>) em.createQuery("select u from UrlEntity u where u.code=:code", UrlEntity.class);
-            query.setParameter("code", codigo);
-            UrlEntity url = query.uniqueResult();
-            UrlUserInsert(em, response, usuario, url);
-            return "redirecionado";
-        }));
+        path("/r", ()->{
+            get("/:code", ((request, response) -> {
+                String codigo = request.params("code");
+                em.getTransaction().begin();
+                Query<UrlEntity> query = (Query<UrlEntity>) em.createQuery("select u from UrlEntity u where u.code=:code", UrlEntity.class);
+                query.setParameter("code", codigo);
+                UrlEntity url = query.uniqueResult();
+                if (url==null){
+                    return "Url eliminada o no existe";
+                }
+                final Session sesion = getSession();
+                spark.Session session=request.session(true);
+                UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+                if (usuario==null){
+                    usuario = sesion.find(UsuarioEntity.class, 1);
+                    session.attribute("usuario", usuario);
+                }
+                em.getTransaction().commit();
+                AccesoInsert(em, response, usuario, url, request, ip);
+                return "redirecionado";
+            }));
+        });
+
     }
 
-    private static void UrlUserInsert(EntityManager em, Response response, UsuarioEntity usuario, UrlEntity url) {
+    private static void AccesoInsert(EntityManager em, Response response, UsuarioEntity usuario, UrlEntity url, Request request, InetAddress ip) {
         url.cantidad++;
         em.getTransaction().begin();
         em.merge(url);
         em.getTransaction().commit();
         em.getTransaction().begin();
-        AccesoEntity urlUsuario = new AccesoEntity();
+        AccesoEntity acceso = new AccesoEntity();
         Date date = new Date();
-        urlUsuario.fecha = new Timestamp(date.getTime());
-        urlUsuario.urlByIdUrl = url;
-        urlUsuario.usuarioByIdUsuario = usuario;
-        em.persist(urlUsuario);
+        acceso.fecha = new Timestamp(date.getTime());
+        acceso.urlByIdUrl = url;
+        acceso.usuarioByIdUsuario = usuario;
+        UserAgent userAgent = UserAgent.parseUserAgentString(request.userAgent());
+        Browser browser = userAgent.getBrowser();
+        acceso.navegador = browser.getName();
+        acceso.sistema = System.getProperty("os.name");
+        acceso.ip = ip.getHostAddress();
+        em.persist(acceso);
         em.getTransaction().commit();
         response.redirect(url.url);
     }

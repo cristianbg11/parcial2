@@ -173,8 +173,13 @@
                                 <#if urls?has_content>
                                     <#list urls as url>
                                         <tr>
-                                            <td>localhost:8080/${url.code}</td>
-                                            <td>${url.url}</td>
+                                            <td><a href="/r/${url.code}" target="_blank">localhost:8080/r/${url.code}</a></td>
+                                            <td><#if url.url?length gt 70>
+                                                    ${url.url[0..50]}
+                                                <#else>
+                                                    ${url.url}
+                                                </#if>
+                                            </td>
                                             <td class="text-center">${url.cantidad}</td>
                                             <td>${url.fecha}</td>
                                             <td><a href="delete?id_url=${url.id}"><button class="btn btn-primary" type="button">Eliminar</button></a></td>

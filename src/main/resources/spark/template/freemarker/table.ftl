@@ -166,7 +166,7 @@
                                         <th>Nombre</th>
                                         <th>Admin</th>
                                         <th>Edad</th>
-                                        <th class="text-center">IP</th>
+                                        <th>IP</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -179,7 +179,7 @@
                                                 <td>${user.nombre}</td>
                                                 <td>${user.administrador?then('Si', 'No')}</td>
                                                 <td>${user.edad}</td>
-                                                <td>${user.ip}</td>
+                                                <td>${user.email}</td>
                                                 <td>
                                                     <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Accion</button>
                                                         <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="#">Ver</a>
@@ -200,7 +200,7 @@
                                         <td><strong>Nombre</strong></td>
                                         <td><strong>Admin</strong></td>
                                         <td><strong>Edad</strong></td>
-                                        <td><strong>Ip</strong></td>
+                                        <td><strong>Email</strong></td>
                                         <td><strong></strong></td>
                                     </tr>
                                 </tfoot>

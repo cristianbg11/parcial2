@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Perfil</title>
+    <title>Profile - Brand</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
@@ -134,10 +134,10 @@
                                         </#if>
                                     </span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg"></a>
                                     <div
-                                        class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu"><a class="dropdown-item" role="presentation" href="/perfil"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Perfil</a><a class="dropdown-item" role="presentation" href="#"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Settings</a>
+                                        class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu"><a class="dropdown-item" role="presentation" href="#"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Profile</a><a class="dropdown-item" role="presentation" href="#"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Settings</a>
                                         <a
                                             class="dropdown-item" role="presentation" href="#"><i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Activity log</a>
-                                            <div class="dropdown-divider"></div><a class="dropdown-item" role="presentation" href="/salir"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Salir</a></div>
+                                            <div class="dropdown-divider"></div><a class="dropdown-item" role="presentation" href="#"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Logout</a></div>
                     </li>
                     </li>
                     </ul>
@@ -154,12 +154,12 @@
                         </div>
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="text-primary font-weight-bold m-0">Url acortadas</h6>
+                                <h6 class="text-primary font-weight-bold m-0">Urls visitados</h6>
                             </div>
                             <div class="card-body">
                                 <#if urls?has_content>
                                     <#list urls as url>
-                                        <a href="/${url.code}" target="_blank"><h4 class="small font-weight-bold">localhost:8080/${url.code}</h4></a>
+                                        <a href="/r/${url.urlByIdUrl.code}" target="_blank"><h4 class="small font-weight-bold">localhost:8080/r/${url.urlByIdUrl.code}</h4></a>
                                     </#list>
                                 </#if>
                             </div>
@@ -224,27 +224,8 @@
                                         </form>
                                     </div>
                                 </div>
-                                <div class="card shadow">
-                                    <div class="card-header py-3">
-                                        <p class="text-primary m-0 font-weight-bold">Informacion del usuario</p>
-                                    </div>
-                                    <div class="card-body">
-                                        <form>
-                                            <div class="form-group"><label for="address"><strong>Sistema</strong></label><input class="form-control" type="text" placeholder="${usuario.sistema}" name="sistema" disabled="" readonly=""></div>
-                                            <div class="form-row">
-                                                <div class="col">
-                                                    <div class="form-group"><label for="city"><strong>Ip</strong></label><input class="form-control" type="text" placeholder="${usuario.ip}" name="ip" disabled="" readonly=""></div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="form-group"><label for="country"><strong>Ultima url acortada en:</strong><br></label><input class="form-control" type="text" placeholder="${fecha}" name="fecha" readonly="" disabled=""></div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </div><iframe allowfullscreen="" frameborder="0" src="https://www.google.com/maps/embed/v1/view?key=AIzaSyCkUXbBQih3qBDFhOVAf_N2hysiM-hZfsk&amp;center=19.4166700%2C++-70.7000000&amp;zoom=11" width="100%" height="400"></iframe></div>
                 </div>
                 <div class="card shadow mb-5">
                     <div class="card-header py-3">
@@ -272,16 +253,15 @@ document.write("" + montharray[month] + " " + daym + ", " + year + "")
 </script>
 </div></div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col">
                                 <form>
-                                    <div class="form-group"><label for="signature"><strong>Usuario</strong><br></label><textarea class="form-control" rows="8" name="signature"></textarea></div>
+                                    <div class="form-group"><label for="signature"><strong>Usuario</strong><br></label><textarea class="form-control" rows="6" name="signature"></textarea></div>
                                     <div class="form-group">
                                         <div class="custom-control custom-switch"><input class="custom-control-input" type="checkbox" id="formCheck-1"><label class="custom-control-label" for="formCheck-1"><strong>Notificar</strong></label></div>
                                     </div>
                                     <div class="form-group"><button class="btn btn-primary btn-sm" type="submit">Comentar</button></div>
                                 </form>
                             </div>
-                            <div class="col"><iframe allowfullscreen frameborder="0" src="https://www.google.com/maps/embed/v1/view?key=AIzaSyCkUXbBQih3qBDFhOVAf_N2hysiM-hZfsk&amp;center=19.4166700%2C++-70.7000000&amp;zoom=11" width="100%" height="400"></iframe></div>
                         </div>
                     </div>
                 </div>

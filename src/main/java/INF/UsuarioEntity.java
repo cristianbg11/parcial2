@@ -17,8 +17,6 @@ public class UsuarioEntity {
     public Integer edad;
     public String longitud;
     public String latitud;
-    public String ip;
-    public String sistema;
     public String perfil;
     public Collection<ComentarioEntity> comentariosById;
     public List<AccesoEntity> accesosById;
@@ -113,25 +111,7 @@ public class UsuarioEntity {
         this.latitud = latitud;
     }
 
-    @Basic
-    @Column(name = "IP", nullable = true, length = 100)
-    public String getIp() {
-        return ip;
-    }
 
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    @Basic
-    @Column(name = "SISTEMA", nullable = true, length = 255)
-    public String getSistema() {
-        return sistema;
-    }
-
-    public void setSistema(String sistema) {
-        this.sistema = sistema;
-    }
 
     @Basic
     @Column(name = "PERFIL", nullable = true)
@@ -157,14 +137,12 @@ public class UsuarioEntity {
                 Objects.equals(email, that.email) &&
                 Objects.equals(longitud, that.longitud) &&
                 Objects.equals(latitud, that.latitud) &&
-                Objects.equals(ip, that.ip) &&
-                Objects.equals(sistema, that.sistema) &&
                 Objects.equals(perfil, that.perfil);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nombre, username, password, administrador, email, edad, longitud, latitud, ip, sistema, perfil);
+        return Objects.hash(id, nombre, username, password, administrador, email, edad, longitud, latitud, perfil);
     }
 
     @OneToMany(mappedBy = "usuarioByIdUsuario", cascade = CascadeType.ALL)
