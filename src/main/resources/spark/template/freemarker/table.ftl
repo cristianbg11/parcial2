@@ -174,16 +174,22 @@
                                 <#if usuarios?has_content>
                                     <#list usuarios as user>
                                         <tr>
-                                            <td><img class="rounded-circle mr-2" width="30" height="30" src="assets/img/avatars/avatar1.jpeg">${user.username}</td>
-                                            <td>${user.nombre}</td>
-                                            <td>${user.administrador?then('Si', 'No')}</td>
-                                            <td>${user.edad}</td>
-                                            <td>${user.ip}</td>
-                                            <td>
-                                                <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Accion</button>
-                                                    <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="update?id_user=${user.id}">Admin</a><a class="dropdown-item" role="presentation" href="#">Ver</a><a class="dropdown-item" role="presentation" href="deleteuser?id_user=${user.id}">Eliminar</a></div>
-                                                </div>
-                                            </td>
+                                            <#if user.username != "anonimo">
+                                                <td><img class="rounded-circle mr-2" width="30" height="30" src="assets/img/avatars/avatar1.jpeg">${user.username}</td>
+                                                <td>${user.nombre}</td>
+                                                <td>${user.administrador?then('Si', 'No')}</td>
+                                                <td>${user.edad}</td>
+                                                <td>${user.ip}</td>
+                                                <td>
+                                                    <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Accion</button>
+                                                        <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="#">Ver</a>
+                                                            <#if user.administrador = false>
+                                                                <a class="dropdown-item" role="presentation" href="update?id_user=${user.id}">Admin</a>
+                                                                <a class="dropdown-item" role="presentation" href="deleteuser?id_user=${user.id}">Eliminar</a>
+                                                            </#if></div>
+                                                    </div>
+                                                </td>
+                                            </#if>
                                         </tr>
                                     </#list>
                                 </#if>

@@ -159,7 +159,7 @@
                             <div class="card-body">
                                 <#if urls?has_content>
                                     <#list urls as url>
-                                        <a href="/${url.urlByIdUrl.code}" target="_blank"><h4 class="small font-weight-bold">localhost:8080/${url.urlByIdUrl.code}</h4></a>
+                                        <a href="/${url.code}" target="_blank"><h4 class="small font-weight-bold">localhost:8080/${url.code}</h4></a>
                                     </#list>
                                 </#if>
                             </div>

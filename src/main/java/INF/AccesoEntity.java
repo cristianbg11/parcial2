@@ -5,8 +5,8 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@Table(name = "URL_USUARIO", schema = "PUBLIC", catalog = "ACORTADOR")
-public class UrlUsuarioEntity {
+@Table(name = "ACCESO", schema = "PUBLIC", catalog = "ACORTADOR")
+public class AccesoEntity {
     public int id;
     public Timestamp fecha;
     public UsuarioEntity usuarioByIdUsuario;
@@ -36,7 +36,7 @@ public class UrlUsuarioEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UrlUsuarioEntity that = (UrlUsuarioEntity) o;
+        AccesoEntity that = (AccesoEntity) o;
         return id == that.id &&
                 Objects.equals(fecha, that.fecha);
     }

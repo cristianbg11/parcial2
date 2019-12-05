@@ -21,7 +21,7 @@ public class UsuarioEntity {
     public String sistema;
     public String perfil;
     public Collection<ComentarioEntity> comentariosById;
-    public List<UrlUsuarioEntity> urlUsuariosById;
+    public List<AccesoEntity> accesosById;
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
@@ -176,12 +176,12 @@ public class UsuarioEntity {
         this.comentariosById = comentariosById;
     }
 
-    @OneToMany(mappedBy = "usuarioByIdUsuario")
-    public List<UrlUsuarioEntity> getUrlUsuariosById() {
-        return urlUsuariosById;
+    @OneToMany(mappedBy = "usuarioByIdUsuario", cascade = CascadeType.ALL)
+    public List<AccesoEntity> getAccesosById() {
+        return accesosById;
     }
 
-    public void setUrlUsuariosById(List<UrlUsuarioEntity> urlUsuariosById) {
-        this.urlUsuariosById = urlUsuariosById;
+    public void setAccesosById(List<AccesoEntity> accesosById) {
+        this.accesosById = accesosById;
     }
 }

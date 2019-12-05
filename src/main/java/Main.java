@@ -1,17 +1,15 @@
 import INF.*;
+import org.h2.tools.Server;
 import org.hibernate.HibernateException;
-import org.hibernate.Metamodel;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import spark.ModelAndView;
-import spark.Request;
 import spark.Response;
 import spark.template.freemarker.FreeMarkerEngine;
 
 import javax.persistence.EntityManager;
-import javax.persistence.metamodel.EntityType;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -21,6 +19,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -45,9 +44,10 @@ public class Main {
     }
 
     public static void main(final String[] args) throws Exception {
-        final Session secion = getSession();
+        Class.forName("org.h2.Driver");
         port(getHerokuAssignedPort());
-
+        startDb();
+        final Session secion = getSession();
         staticFiles.location("/publico");
         EntityManager em = getSession();
         InetAddress ip = InetAddress.getLocalHost();
@@ -168,7 +168,8 @@ public class Main {
             }else {
                 session.attribute("usuario", usuario);
             }
-            Query query = (Query) em.createQuery("select u from UrlEntity u");
+            Query query = (Query) em.createQuery("select u from UrlEntity u where u.usuarioByIdUsuario=:user");
+            query.setParameter("user", usuario);
             List<UrlEntity> urls = query.getResultList();
             attributes.put("usuario",usuario);
             attributes.put("urls", urls);
@@ -186,10 +187,10 @@ public class Main {
             }else {
                 session.attribute("usuario", usuario);
             }
-            Query query = (Query) em.createQuery("select u from UrlUsuarioEntity u where u.usuarioByIdUsuario = :user");
+            Query query = (Query) em.createQuery("select u from AccesoEntity u where u.usuarioByIdUsuario = :user");
             query.setParameter("user", usuario);
-            List<UrlUsuarioEntity> urls = query.getResultList();
-            Timestamp fecha = usuario.urlUsuariosById.get(usuario.urlUsuariosById.size()-1).fecha;
+            List<AccesoEntity> urls = query.getResultList();
+            Timestamp fecha = usuario.accesosById.get(usuario.accesosById.size()-1).fecha;
             attributes.put("usuario",usuario);
             attributes.put("urls", urls);
             attributes.put("fecha", fecha);
@@ -219,8 +220,8 @@ public class Main {
             if (usuario.administrador==false){
                 response.redirect("/index");
             }
-            Query query = (Query) em.createQuery("select u from UrlUsuarioEntity u");
-            List<UrlUsuarioEntity> urls = query.getResultList();
+            Query query = (Query) em.createQuery("select u from UrlEntity u");
+            List<AccesoEntity> urls = query.getResultList();
             //urls.get().urlByIdUrl.code
             attributes.put("usuario",usuario);
             attributes.put("urls", urls);
@@ -316,9 +317,9 @@ public class Main {
             }
             int id = Integer.parseInt(request.queryParams("id_url"));
             UrlEntity url = sesion.find(UrlEntity.class, id);
-            Query query = (Query) em.createQuery("select u from UrlUsuarioEntity u where u.urlByIdUrl = :url");
+            Query query = (Query) em.createQuery("select u from AccesoEntity u where u.urlByIdUrl = :url");
             query.setParameter("url", url);
-            List<UrlUsuarioEntity> urlusers = query.getResultList();
+            List<AccesoEntity> urlusers = query.getResultList();
             attributes.put("urlusers", urlusers);
             attributes.put("url",url);
             attributes.put("usuario",usuario);
@@ -352,7 +353,7 @@ public class Main {
         em.merge(url);
         em.getTransaction().commit();
         em.getTransaction().begin();
-        UrlUsuarioEntity urlUsuario = new UrlUsuarioEntity();
+        AccesoEntity urlUsuario = new AccesoEntity();
         Date date = new Date();
         urlUsuario.fecha = new Timestamp(date.getTime());
         urlUsuario.urlByIdUrl = url;
@@ -362,6 +363,16 @@ public class Main {
         response.redirect(url.url);
     }
 
+    public static void startDb() {
+        try {
+            Server.createTcpServer("-tcpPort",
+                    "8081",
+                    "-tcpAllowOthers",
+                    "-tcpDaemon").start();
+        }catch (SQLException ex){
+            System.out.println("Problema con la base de datos: "+ex.getMessage());
+        }
+    }
 
     private static String renderContent(String htmlFile) throws IOException, URISyntaxException {
         URL url = Main.class.getResource(htmlFile);

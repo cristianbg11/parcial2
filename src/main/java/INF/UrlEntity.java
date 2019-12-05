@@ -1,6 +1,7 @@
 package INF;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -11,7 +12,9 @@ public class UrlEntity {
     public String code;
     public String url;
     public Integer cantidad;
-    public Collection<UrlUsuarioEntity> urlUsuariosById;
+    public Collection<AccesoEntity> accesosById;
+    public UsuarioEntity usuarioByIdUsuario;
+    public Timestamp fecha;
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
@@ -53,6 +56,16 @@ public class UrlEntity {
         this.cantidad = cantidad;
     }
 
+    @Basic
+    @Column(name = "FECHA", nullable = true)
+    public Timestamp getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Timestamp fecha) {
+        this.fecha = fecha;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -61,20 +74,31 @@ public class UrlEntity {
         return id == urlEntity.id &&
                 Objects.equals(cantidad, urlEntity.cantidad) &&
                 Objects.equals(code, urlEntity.code) &&
-                Objects.equals(url, urlEntity.url);
+                Objects.equals(url, urlEntity.url)&&
+                Objects.equals(fecha, urlEntity.fecha);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, code, url, cantidad);
+        return Objects.hash(id, code, url, cantidad, fecha);
     }
 
     @OneToMany(mappedBy = "urlByIdUrl", cascade = CascadeType.ALL)
-    public Collection<UrlUsuarioEntity> getUrlUsuariosById() {
-        return urlUsuariosById;
+    public Collection<AccesoEntity> getAccesosById() {
+        return accesosById;
     }
 
-    public void setUrlUsuariosById(Collection<UrlUsuarioEntity> urlUsuariosById) {
-        this.urlUsuariosById = urlUsuariosById;
+    public void setAccesosById(Collection<AccesoEntity> accesosById) {
+        this.accesosById = accesosById;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID")
+    public UsuarioEntity getUsuarioByIdUsuario() {
+        return usuarioByIdUsuario;
+    }
+
+    public void setUsuarioByIdUsuario(UsuarioEntity usuarioByIdUsuario) {
+        this.usuarioByIdUsuario = usuarioByIdUsuario;
     }
 }
