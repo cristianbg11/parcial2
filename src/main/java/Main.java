@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static spark.Spark.*;
@@ -117,7 +118,7 @@ public class Main {
                     session.attribute("usuario", usuario);
                     if (request.queryParams("recordatorio") !=null && request.queryParams("recordatorio").equals("si") ){
                         Map<String, String> cookies=request.cookies();
-                        response.cookie("/", "CookieUsuario", String.valueOf(usuario.id), 604800, true);
+                        response.cookie("/", "CookieUsuario", String.valueOf(usuario.id), 604800, false);
                         /*
                         for (String key : cookies.keySet()) {
                             if (key != null) {
@@ -154,11 +155,13 @@ public class Main {
             Map<String, Object> attributes = new HashMap<>();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+
             if (usuario==null){
                 final Session sesion = getSession();
                 usuario = sesion.find(UsuarioEntity.class, 1);
                 session.attribute("usuario", usuario);
             } else if (usuario.id==1){
+                attributes.put("usuario",usuario);
                 attributes.put("urls",urlList);
             } else {
                 session.attribute("usuario", usuario);
@@ -250,12 +253,10 @@ public class Main {
                 url.usuarioByIdUsuario = usuario;
                 Date date = new Date();
                 url.fecha = new Timestamp(date.getTime());
-                session.attribute("url", url);
                 em.persist(url);
                 em.getTransaction().commit();
                 if(usuario.id==1){
                     urlList.add(url);
-                    session.attribute("urls", urlList);
                 }
             }
             response.redirect("/index");
@@ -321,14 +322,41 @@ public class Main {
             }
             int id = Integer.parseInt(request.queryParams("id_url"));
             UrlEntity url = sesion.find(UrlEntity.class, id);
-            Query query = (Query) em.createQuery("select a from AccesoEntity a where a.urlByIdUrl = :url");
+            Query query = (Query) em.createQuery("select a from AccesoEntity a where a.urlByIdUrl = :url order by fecha");
             query.setParameter("url", url);
             List<AccesoEntity> accesos = query.getResultList();
+
+            Iterator it = accesos.iterator();
+
+            HashMap graf_data=new HashMap();
+            while(it.hasNext()) {
+                AccesoEntity data=(AccesoEntity)it.next();
+                String hora=new SimpleDateFormat("yyyy-MM-dd HH:").format(data.fecha)+":00";
+                if(graf_data.containsKey(hora)){
+                    graf_data.put(hora,(int)graf_data.get(hora)+1);
+                }else{
+                    graf_data.put(hora,1);
+                }
+            }
+
             attributes.put("accesos", accesos);
             attributes.put("url",url);
             attributes.put("usuario",usuario);
+            attributes.put("graf_data",graf_data);
+
             return new ModelAndView(attributes, "blank.ftl");
         } , new FreeMarkerEngine());
+
+        get("/deleteacceso", (request, response)-> {
+            final Session sesion = getSession();
+            int id = Integer.parseInt(request.queryParams("id_acceso"));
+            AccesoEntity acceso = sesion.find(AccesoEntity.class, id);
+            sesion.getTransaction().begin();
+            sesion.remove(acceso);
+            sesion.getTransaction().commit();
+            response.redirect("/stats?id_url="+acceso.urlByIdUrl.id);
+            return "acceso Borrado";
+        });
 
         path("/r", ()->{
             get("/:code", ((request, response) -> {

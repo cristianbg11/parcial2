@@ -170,7 +170,11 @@
                                             </#if>
                                         </a>
                                     </td>
-                                    <td class="text-right"><a href="/r/${url.code}" target="_blank">localhost:8080/r/${url.code}</a></td>
+                                    <td class="text-right"><a href="/r/${url.code}" target="_blank">localhost:8080/r/${url.code}</a>
+                                        <#if usuario.id !=1>
+                                            <a href="/stats?id_url=${url.id}"><i class="fas fa-laugh-wink" style="margin-left: 5px;"></i></a>
+                                        </#if>
+                                    </td>
                                 </tr>
                             </#list>
                         </#if>
