@@ -50,7 +50,7 @@ public class Main {
     public static void main(final String[] args) throws Exception {
         Class.forName("org.h2.Driver");
         port(getHerokuAssignedPort());
-        //startDb();
+        startDb();
         final Session secion = getSession();
         staticFiles.location("/publico");
         EntityManager em = getSession();
@@ -326,6 +326,23 @@ public class Main {
             query.setParameter("url", url);
             List<AccesoEntity> accesos = query.getResultList();
 
+            //Object[] objects;
+            Query query1 = (Query) em.createQuery("select a.usuarioByIdUsuario.username, count(*) as cant from AccesoEntity a where a.urlByIdUrl = :url group by a.usuarioByIdUsuario.username order by cant");
+            query1.setParameter("url", url);
+            List<Object> objects = query1.getResultList();
+            ArrayList<Usuarios> usuarios = new ArrayList<>();
+            for(Object o: objects) {
+                Usuarios usuarios1 = new Usuarios();
+                for(int i = 0; i < objects.size(); i++) {
+                    if(i==0){
+                        usuarios1.username=((Object[])o)[i].toString();
+                    }
+                    else{
+                        usuarios1.cant = Integer.parseInt(((Object[])o)[i].toString());
+                    }
+                }
+                usuarios.add(usuarios1);
+            }
             Iterator it = accesos.iterator();
 
             HashMap graf_data=new HashMap();
@@ -342,6 +359,7 @@ public class Main {
             attributes.put("accesos", accesos);
             attributes.put("url",url);
             attributes.put("usuario",usuario);
+            attributes.put("usuarios", usuarios);
             attributes.put("graf_data",graf_data);
 
             return new ModelAndView(attributes, "blank.ftl");
@@ -351,6 +369,11 @@ public class Main {
             final Session sesion = getSession();
             int id = Integer.parseInt(request.queryParams("id_acceso"));
             AccesoEntity acceso = sesion.find(AccesoEntity.class, id);
+            UrlEntity url = sesion.find(UrlEntity.class, acceso.urlByIdUrl.id);
+            url.cantidad--;
+            em.getTransaction().begin();
+            em.merge(url);
+            em.getTransaction().commit();
             sesion.getTransaction().begin();
             sesion.remove(acceso);
             sesion.getTransaction().commit();
