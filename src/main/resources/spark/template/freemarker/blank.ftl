@@ -190,6 +190,8 @@
                             </div>
                         </div>
                         <div id="curve_chart" style="display: block; width: 100%; min-height: 320px;"></div>
+                        <img class="img-fluid" style="height: 190px; width: 190px; margin: 0 auto" src="https://quickchart.io/qr?text=https://quickchart.io/chart?c={type:'line', data:{labels:[<#list graf_data as hora,valor>'${hora}', </#list>], datasets:[{label:'Visitas',data:[<#list graf_data as hora,valor>'${valor}',</#list>]}]}}"
+                        />
                     </div>
                 </div>
                 <div class="col-lg-5 col-xl-4">
@@ -204,6 +206,7 @@
                             </div>
                         </div>
                         <div id="donutchart" style="display: block; width: 100%; min-height: 320px;"></div>
+                        <img class="img-fluid" style="height: 190px; width: 190px; margin: 0 auto" src="https://quickchart.io/qr?text=https://quickchart.io/chart?c={type:'doughnut',data:{labels:[<#list usuarios as user>'${user.username}',</#list>], datasets:[{data:[<#list usuarios as user>${user.cant},</#list>]}]}}"/>
                 </div>
             </div>
         </div>
