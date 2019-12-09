@@ -76,8 +76,6 @@ public class Main {
             admin.administrador = true;
             admin.email ="cristianbg011@gmail.com";
             admin.edad = 22;
-            //admin.ip = ip.getHostAddress();
-            //admin.sistema = req.userAgent();
             em.getTransaction().begin();
             em.persist(admin);
             em.getTransaction().commit();
@@ -294,7 +292,7 @@ public class Main {
             return "Url Borrado";
         });
 
-        post("/update", (request, response)-> {
+        get("/update", (request, response)-> {
             final Session sesion = getSession();
             int id = Integer.parseInt(request.queryParams("id_user"));
             UsuarioEntity usuario = sesion.find(UsuarioEntity.class, id);
