@@ -15,7 +15,7 @@
     <div id="wrapper">
         <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
             <div class="container-fluid d-flex flex-column p-0">
-                <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="/index">
                     <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-laugh-wink"></i></div>
                     <div class="sidebar-brand-text mx-3"><span>Acortador</span></div>
                 </a>
@@ -162,7 +162,7 @@
                             <#list urls as url>
                                 <tr>
                                     <td class="text-left">
-                                        <a href="/r/${url.code}"  target="_blank">
+                                        <a class="link-previews" href="${url.url}"  target="_blank">
                                             <#if url.url?length gt 70>
                                                 ${url.url[0..70]}
                                             <#else>
@@ -195,6 +195,16 @@
     <script src="assets/js/bs-charts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
     <script src="assets/js/theme.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react@16/umd/react.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@16/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/styled-components@4/dist/styled-components.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@microlink/mql@latest/dist/mql.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@microlink/vanilla@latest/dist/microlink.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function (event) {
+            microlink('.link-previews', { size: 'small' })
+        })
+    </script>
 </body>
 
 </html>

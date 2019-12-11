@@ -15,7 +15,7 @@
     <div id="wrapper">
         <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
             <div class="container-fluid d-flex flex-column p-0">
-                <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="/index">
                     <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-laugh-wink"></i></div>
                     <div class="sidebar-brand-text mx-3"><span>Acortador</span></div>
                 </a>
@@ -134,10 +134,10 @@
                                         </#if>
                                     </span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg"></a>
                                     <div
-                                        class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu"><a class="dropdown-item" role="presentation" href="#"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Profile</a><a class="dropdown-item" role="presentation" href="#"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Settings</a>
+                                        class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu"><a class="dropdown-item" role="presentation" href="/perfil"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Perfil</a><a class="dropdown-item" role="presentation" href="#"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Settings</a>
                                         <a
                                             class="dropdown-item" role="presentation" href="#"><i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Activity log</a>
-                                            <div class="dropdown-divider"></div><a class="dropdown-item" role="presentation" href="#"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Logout</a></div>
+                                            <div class="dropdown-divider"></div><a class="dropdown-item" role="presentation" href="/salir"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Salir</a></div>
                     </li>
                     </li>
                     </ul>
@@ -149,17 +149,31 @@
                     <div class="col-lg-4">
                         <div class="card mb-3">
                             <div class="card-body text-center shadow"><img class="rounded-circle mb-3 mt-4" src="assets/img/dogs/image2.jpeg" width="160" height="160">
-                                <div class="mb-3"><button class="btn btn-primary btn-sm" type="button">Cambiar foto</button></div>
+                                <#if profile == true>
+                                    <div class="mb-3"><button class="btn btn-outline-primary btn-sm" type="button">Cambiar foto</button></div>
+                                </#if>
                             </div>
                         </div>
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="text-primary font-weight-bold m-0">Urls visitados</h6>
+                                <h6 class="text-primary font-weight-bold m-0">Urls acortadas</h6>
+                            </div>
+                            <div class="card-body">
+                                <#if acortados?has_content>
+                                    <#list acortados as acortado>
+                                        <a href="/r/${acortado.code}" target="_blank"><h4 class="small font-weight-bold">localhost:8080/r/${acortado.code}</h4></a>
+                                    </#list>
+                                </#if>
+                            </div>
+                        </div>
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="text-primary font-weight-bold m-0">Urls visitadas</h6>
                             </div>
                             <div class="card-body">
                                 <#if urls?has_content>
                                     <#list urls as url>
-                                        <a href="/r/${url.urlByIdUrl.code}" target="_blank"><h4 class="small font-weight-bold">localhost:8080/r/${url.urlByIdUrl.code}</h4></a>
+                                        <a href="/r/${url.code}" target="_blank"><h4 class="small font-weight-bold">localhost:8080/r/${url.code}</h4></a>
                                     </#list>
                                 </#if>
                             </div>
@@ -202,27 +216,50 @@
                                     <div class="card-header py-3">
                                         <p class="text-primary m-0 font-weight-bold">Configuraciones de usuario</p>
                                     </div>
-                                    <div class="card-body">
-                                        <form>
-                                            <div class="form-row">
-                                                <div class="col">
-                                                    <div class="form-group"><label for="username"><strong>Username</strong></label><input class="form-control" type="text" placeholder="${usuario.username}" name="username"></div>
+                                    <#if profile == true>
+                                        <div class="card-body">
+                                            <form>
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-group"><label for="username"><strong>Username</strong></label><input class="form-control" type="text" placeholder="${usuario.username}" name="username"></div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-group"><label for="email"><strong>Email</strong></label><input class="form-control" type="email" placeholder="${usuario.email}" name="email"></div>
+                                                    </div>
                                                 </div>
-                                                <div class="col">
-                                                    <div class="form-group"><label for="email"><strong>Email</strong></label><input class="form-control" type="email" placeholder="${usuario.email}" name="email"></div>
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-group"><label for="first_name"><strong>Nombre</strong></label><input class="form-control" type="text" placeholder="${usuario.nombre}" name="nombre"></div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-group"><label for="last_name"><strong>Edad</strong></label><input class="form-control" type="text" placeholder="${usuario.edad}" name="edad"></div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <div class="col">
-                                                    <div class="form-group"><label for="first_name"><strong>Nombre</strong></label><input class="form-control" type="text" placeholder="${usuario.nombre}" name="nombre"></div>
+                                                <div class="form-group"><button class="btn btn-outline-primary btn-sm" type="submit">Guardar</button></div>
+                                            </form>
+                                        </div>
+                                    <#else>
+                                        <div class="card-body">
+                                            <form>
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-group"><label for="username"><strong>Username</strong></label><input type="text" class="form-control" name="username" readonly value="${user.username}" /></div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-group"><label for="email"><strong>Email</strong></label><input type="email" class="form-control" name="email" readonly value="${user.email}" /></div>
+                                                    </div>
                                                 </div>
-                                                <div class="col">
-                                                    <div class="form-group"><label for="last_name"><strong>Edad</strong></label><input class="form-control" type="text" placeholder="${usuario.edad}" name="edad"></div>
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <div class="form-group"><label for="first_name"><strong>Nombre</strong></label><input type="text" class="form-control" name="nombre" readonly value="${user.nombre}" /></div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="form-group"><label for="last_name"><strong>Edad</strong></label><input type="text" class="form-control" name="edad" readonly value="${user.edad}" /></div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group"><button class="btn btn-primary btn-sm" type="submit">Guardar</button></div>
-                                        </form>
-                                    </div>
+                                            </form>
+                                        </div>
+                                    </#if>
                                 </div>
                             </div>
                         </div><iframe allowfullscreen="" frameborder="0" src="https://www.google.com/maps/embed/v1/view?key=AIzaSyCkUXbBQih3qBDFhOVAf_N2hysiM-hZfsk&amp;center=19.4166700%2C++-70.7000000&amp;zoom=11" width="100%" height="400"></iframe></div>

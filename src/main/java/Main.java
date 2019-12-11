@@ -183,16 +183,51 @@ public class Main {
             }else {
                 session.attribute("usuario", usuario);
             }
-            Query query = (Query) em.createQuery("select a from AccesoEntity a where a.usuarioByIdUsuario = :user");
+            Query query = (Query) em.createQuery("select distinct a.urlByIdUrl from AccesoEntity a where a.usuarioByIdUsuario = :user");
             query.setParameter("user", usuario);
-            List<AccesoEntity> urls = query.getResultList();
+            List<UrlEntity> urls = query.getResultList();
+            Query query1 = (Query) em.createQuery("select u from UrlEntity u where u.usuarioByIdUsuario = :user");
+            query1.setParameter("user", usuario);
+            List<UrlEntity> acortados = query1.getResultList();
             //Timestamp fecha = usuario.accesosById.get(usuario.accesosById.size()-1).fecha;
+            boolean profile = true;
+            attributes.put("profile", profile);
             attributes.put("usuario",usuario);
             attributes.put("urls", urls);
+            attributes.put("acortados", acortados);
             //attributes.put("fecha", fecha);
             return new ModelAndView(attributes, "profile.ftl");
         } , new FreeMarkerEngine());
 
+        get("/ver", (request, response) -> {
+            final Session sesion = getSession();
+            Map<String, Object> attributes = new HashMap<>();
+            spark.Session session=request.session(true);
+            UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+            if (usuario==null){
+                usuario = sesion.find(UsuarioEntity.class, 1);
+                session.attribute("usuario", usuario);
+            }else {
+                session.attribute("usuario", usuario);
+            }
+            int id = Integer.parseInt(request.queryParams("id_user"));
+            boolean profile = false;
+            UsuarioEntity user = sesion.find(UsuarioEntity.class, id);
+            Query query = (Query) em.createQuery("select distinct a.urlByIdUrl from AccesoEntity a where a.usuarioByIdUsuario = :user");
+            query.setParameter("user", user);
+            List<AccesoEntity> urls = query.getResultList();
+
+            Query query1 = (Query) em.createQuery("select u from UrlEntity u where u.usuarioByIdUsuario = :user");
+            query1.setParameter("user", user);
+            List<UrlEntity> acortados = query1.getResultList();
+
+            attributes.put("usuario",usuario);
+            attributes.put("profile", profile);
+            attributes.put("user", user);
+            attributes.put("urls", urls);
+            attributes.put("acortados", acortados);
+            return new ModelAndView(attributes, "profile.ftl");
+        }, new FreeMarkerEngine());
 
         get("/usuarios", (request, response)-> {
             Map<String, Object> attributes = new HashMap<>();
@@ -378,6 +413,14 @@ public class Main {
             response.redirect("/stats?id_url="+acceso.urlByIdUrl.id);
             return "acceso Borrado";
         });
+
+        path("/user", ()->{
+            get("/:id", (request, response) -> {
+
+                return "rest";
+            });
+        });
+
 
         path("/r", ()->{
             get("/:code", ((request, response) -> {

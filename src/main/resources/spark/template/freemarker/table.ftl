@@ -15,7 +15,7 @@
     <div id="wrapper">
         <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
             <div class="container-fluid d-flex flex-column p-0">
-                <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="/index">
                     <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-laugh-wink"></i></div>
                     <div class="sidebar-brand-text mx-3"><span>Acortador</span></div>
                 </a>
@@ -182,7 +182,7 @@
                                                 <td>${user.email}</td>
                                                 <td>
                                                     <div class="dropdown"><button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Accion</button>
-                                                        <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="#">Ver</a>
+                                                        <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="ver?id_user=${user.id}">Ver</a>
                                                             <#if user.administrador = false>
                                                                 <a class="dropdown-item" role="presentation" href="update?id_user=${user.id}">Admin</a>
                                                                 <a class="dropdown-item" role="presentation" href="deleteuser?id_user=${user.id}">Eliminar</a>
