@@ -3,6 +3,7 @@ package INF;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -12,7 +13,7 @@ public class UrlEntity {
     public String code;
     public String url;
     public Integer cantidad;
-    public Collection<AccesoEntity> accesosById;
+    public List<AccesoEntity> accesosById;
     public UsuarioEntity usuarioByIdUsuario;
     //@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.SSS")
     public Timestamp fecha;
@@ -85,11 +86,11 @@ public class UrlEntity {
     }
 
     @OneToMany(mappedBy = "urlByIdUrl", cascade = CascadeType.ALL)
-    public Collection<AccesoEntity> getAccesosById() {
+    public List<AccesoEntity> getAccesosById() {
         return accesosById;
     }
 
-    public void setAccesosById(Collection<AccesoEntity> accesosById) {
+    public void setAccesosById(List<AccesoEntity> accesosById) {
         this.accesosById = accesosById;
     }
 

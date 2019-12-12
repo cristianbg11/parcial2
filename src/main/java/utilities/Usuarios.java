@@ -1,4 +1,4 @@
-package INF;
+package utilities;
 
 public class Usuarios {
     public String username;

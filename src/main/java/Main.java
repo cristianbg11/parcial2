@@ -1,7 +1,7 @@
 import INF.AccesoEntity;
 import INF.UrlEntity;
 import INF.UsuarioEntity;
-import INF.Usuarios;
+import utilities.*;
 import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.h2.tools.Server;
@@ -44,23 +44,7 @@ public class Main {
         EntityManager em = Inicio.getSession();
         InetAddress ip = InetAddress.getLocalHost();
         UrlService urlService = UrlService.getInstance();
-        //new UrlController(new UrlService(), persona);
-        path("/rest", ()->{
 
-            after("/*", (req, res) -> {
-                res.type("application/json");
-            });
-            path("/links", () -> {
-                get("/", (request, response) -> "RUTA API REST");
-                get("", (request, response) -> urlService.getAllLinks(), json());
-                get("/:id", (request, response) -> {
-                    UsuarioEntity persona = secion.find(UsuarioEntity.class, Integer.parseInt(request.params(":id")));
-                    return urlService.getLinks(persona);
-                }, json());
-            });
-
-        });
-        
         if (secion.find(UsuarioEntity.class, 1)==null){
             UsuarioEntity anonimo = new UsuarioEntity();
             anonimo.nombre = "Anonimo";
@@ -85,6 +69,30 @@ public class Main {
             em.persist(admin);
             em.getTransaction().commit();
         }
+
+        path("/rest", ()->{
+
+            after("/*", (req, res) -> {
+                res.type("application/json");
+            });
+            get("/", (request, response) -> "RUTA API REST");
+            path("/links", () -> {
+                /*
+                get("/pr", (request, response) -> {
+                    UrlEntity link = secion.find(UrlEntity.class, 1);
+                    return new Gson().toJson(link.url);
+                });
+                */
+                get("", (request, response) -> urlService.getAllLinks(), json());
+
+                get("/:id", (request, response) -> {
+                    UsuarioEntity persona = secion.find(UsuarioEntity.class, Integer.parseInt(request.params(":id")));
+                    return urlService.getLinks(persona);
+                }, json());
+
+            });
+
+        });
 
         get("/", (request, response)-> {
             //response.redirect("/login.html");

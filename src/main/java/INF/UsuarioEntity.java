@@ -18,7 +18,7 @@ public class UsuarioEntity {
     public String longitud;
     public String latitud;
     public String perfil;
-    public Collection<ComentarioEntity> comentariosById;
+    public List<ComentarioEntity> comentariosById;
     public List<AccesoEntity> accesosById;
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -146,11 +146,11 @@ public class UsuarioEntity {
     }
 
     @OneToMany(mappedBy = "usuarioByIdUsuario", cascade = CascadeType.ALL)
-    public Collection<ComentarioEntity> getComentariosById() {
+    public List<ComentarioEntity> getComentariosById() {
         return comentariosById;
     }
 
-    public void setComentariosById(Collection<ComentarioEntity> comentariosById) {
+    public void setComentariosById(List<ComentarioEntity> comentariosById) {
         this.comentariosById = comentariosById;
     }
 

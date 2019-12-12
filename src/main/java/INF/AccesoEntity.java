@@ -15,7 +15,6 @@ public class AccesoEntity {
     public String ip;
     public String sistema;
 
-
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
     public int getId() {
