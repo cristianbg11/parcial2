@@ -4,6 +4,13 @@ public class Usuarios {
     public String username;
     public int cant;
 
+    public Usuarios(String s, int i) {
+    }
+
+    public Usuarios() {
+
+    }
+
     public String getUsername() {
         return username;
     }

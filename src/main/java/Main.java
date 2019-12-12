@@ -1,19 +1,20 @@
-import INF.*;
+import INF.AccesoEntity;
+import INF.UrlEntity;
+import INF.UsuarioEntity;
+import INF.Usuarios;
 import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.h2.tools.Server;
-import org.hibernate.HibernateException;
-import org.hibernate.query.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
+import services.Inicio;
+import services.UrlService;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.template.freemarker.FreeMarkerEngine;
 
 import javax.persistence.EntityManager;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URISyntaxException;
@@ -28,34 +29,38 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static spark.Spark.*;
+import static utilities.JsonUtil.json;
 
 public class Main {
-    private static final SessionFactory ourSessionFactory;
 
-    static {
-        try {
-            Configuration configuration = new Configuration();
-            configuration.configure();
-
-            ourSessionFactory = configuration.buildSessionFactory();
-        } catch (Throwable ex) {
-            throw new ExceptionInInitializerError(ex);
-        }
-    }
-
-    public static Session getSession() throws HibernateException {
-        return ourSessionFactory.openSession();
-    }
     public static ArrayList<UrlEntity> urlList = new ArrayList<UrlEntity>();
     public static void main(final String[] args) throws Exception {
         Class.forName("org.h2.Driver");
+
         port(getHerokuAssignedPort());
         startDb();
-        final Session secion = getSession();
+        final Session secion = Inicio.getSession();
         staticFiles.location("/publico");
-        EntityManager em = getSession();
+        EntityManager em = Inicio.getSession();
         InetAddress ip = InetAddress.getLocalHost();
+        UrlService urlService = UrlService.getInstance();
+        //new UrlController(new UrlService(), persona);
+        path("/rest", ()->{
 
+            after("/*", (req, res) -> {
+                res.type("application/json");
+            });
+            path("/links", () -> {
+                get("/", (request, response) -> "RUTA API REST");
+                get("", (request, response) -> urlService.getAllLinks(), json());
+                get("/:id", (request, response) -> {
+                    UsuarioEntity persona = secion.find(UsuarioEntity.class, Integer.parseInt(request.params(":id")));
+                    return urlService.getLinks(persona);
+                }, json());
+            });
+
+        });
+        
         if (secion.find(UsuarioEntity.class, 1)==null){
             UsuarioEntity anonimo = new UsuarioEntity();
             anonimo.nombre = "Anonimo";
@@ -83,7 +88,7 @@ public class Main {
 
         get("/", (request, response)-> {
             //response.redirect("/login.html");
-            final Session sesion = getSession();
+            final Session sesion = Inicio.getSession();
             if (request.cookie("CookieUsuario") != null){
                 int id = Integer.parseInt((request.cookie("CookieUsuario")));
                 UsuarioEntity usuarioEntity = sesion.find(UsuarioEntity.class, id);
@@ -96,7 +101,7 @@ public class Main {
 
         get("/visitar", (request, response)-> {
             //response.redirect("/login.html");
-            final Session sesion = getSession();
+            final Session sesion = Inicio.getSession();
             UsuarioEntity usuario = sesion.find(UsuarioEntity.class, 1);
             spark.Session session=request.session(true);
             session.attribute("usuario", usuario);
@@ -155,7 +160,7 @@ public class Main {
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
 
             if (usuario==null){
-                final Session sesion = getSession();
+                final Session sesion = Inicio.getSession();
                 usuario = sesion.find(UsuarioEntity.class, 1);
                 session.attribute("usuario", usuario);
             } else if (usuario.id==1){
@@ -177,7 +182,7 @@ public class Main {
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
             if (usuario==null){
-                final Session sesion = getSession();
+                final Session sesion = Inicio.getSession();
                 usuario = sesion.find(UsuarioEntity.class, 1);
                 session.attribute("usuario", usuario);
             }else {
@@ -200,7 +205,7 @@ public class Main {
         } , new FreeMarkerEngine());
 
         get("/ver", (request, response) -> {
-            final Session sesion = getSession();
+            final Session sesion = Inicio.getSession();
             Map<String, Object> attributes = new HashMap<>();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
@@ -234,7 +239,7 @@ public class Main {
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
             if (usuario==null){
-                final Session sesion = getSession();
+                final Session sesion = Inicio.getSession();
                 usuario = sesion.find(UsuarioEntity.class, 1);
                 session.attribute("usuario", usuario);
             }else {
@@ -255,7 +260,7 @@ public class Main {
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
             if (usuario==null){
-                final Session sesion = getSession();
+                final Session sesion = Inicio.getSession();
                 usuario = sesion.find(UsuarioEntity.class, 1);
                 session.attribute("usuario", usuario);
             }else {
@@ -306,7 +311,7 @@ public class Main {
         }); //Finaliza Sesión
 
         get("/delete", (request, response)-> {
-            final Session sesion = getSession();
+            final Session sesion = Inicio.getSession();
             int id = Integer.parseInt(request.queryParams("id_url"));
             UrlEntity url = sesion.find(UrlEntity.class, id);
             sesion.getTransaction().begin();
@@ -317,7 +322,7 @@ public class Main {
         });
 
         get("/deleteuser", (request, response)-> {
-            final Session sesion = getSession();
+            final Session sesion = Inicio.getSession();
             int id = Integer.parseInt(request.queryParams("id_user"));
             UsuarioEntity usuario = sesion.find(UsuarioEntity.class, id);
             sesion.getTransaction().begin();
@@ -328,7 +333,7 @@ public class Main {
         });
 
         get("/update", (request, response)-> {
-            final Session sesion = getSession();
+            final Session sesion = Inicio.getSession();
             int id = Integer.parseInt(request.queryParams("id_user"));
             UsuarioEntity usuario = sesion.find(UsuarioEntity.class, id);
             em.getTransaction().begin();
@@ -340,7 +345,7 @@ public class Main {
         });
 
         get("/stats", (request, response)-> {
-            final Session sesion = getSession();
+            final Session sesion = Inicio.getSession();
             Map<String, Object> attributes = new HashMap<>();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
@@ -399,7 +404,7 @@ public class Main {
         } , new FreeMarkerEngine());
 
         get("/deleteacceso", (request, response)-> {
-            final Session sesion = getSession();
+            final Session sesion = Inicio.getSession();
             int id = Integer.parseInt(request.queryParams("id_acceso"));
             AccesoEntity acceso = sesion.find(AccesoEntity.class, id);
             UrlEntity url = sesion.find(UrlEntity.class, acceso.urlByIdUrl.id);
@@ -432,7 +437,7 @@ public class Main {
                 if (url==null){
                     return "Url eliminada o no existe";
                 }
-                final Session sesion = getSession();
+                final Session sesion = Inicio.getSession();
                 spark.Session session=request.session(true);
                 UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
                 if (usuario==null){

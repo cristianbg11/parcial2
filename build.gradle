@@ -26,13 +26,12 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     //Librerias de Hibernate
-    compile 'org.hibernate:hibernate-core:5.4.1.Final'
-    compile 'org.hibernate:hibernate-entitymanager:5.4.1.Final'
+    compile 'org.hibernate:hibernate-core:5.4.10.Final'
+    compile 'org.hibernate:hibernate-entitymanager:5.4.10.Final'
     //Driver de conexión
     //compile 'com.h2database:h2:1.4.197'
-    compile group: 'com.h2database', name: 'h2', version: '1.4.197'
-    //compile files('libs/OJDBC8-Full')
-    compile group: 'org.sql2o', name: 'sql2o', version: '1.5.4'
+    compile group: 'com.h2database', name: 'h2', version: '1.4.200'
+
     //librearias para los sistemas de plantillas.
     compile 'com.sparkjava:spark-core:2.9.1'
     compile 'com.sparkjava:spark-template-freemarker:2.5.5'
@@ -44,11 +43,11 @@ dependencies {
 
     //Libreria GSON para trabajar con el parseo de JSON a Objeto y viceversa.
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
-    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.1'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
     //compile 'org.webjars:bootstrap:3.3.6', //existe un bug que no permite varias rutas, están metiendo mano.
-    compile "org.slf4j:slf4j-simple:1.7.21"
+    compile "org.slf4j:slf4j-simple:1.7.29"
     // https://mvnrepository.com/artifact/eu.bitwalker/UserAgentUtils
-    compile group: 'eu.bitwalker', name: 'UserAgentUtils', version: '1.17'
+    compile group: 'eu.bitwalker', name: 'UserAgentUtils', version: '1.21'
     //Librería para el manejo de XML
     // https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream
     //compile group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.10'

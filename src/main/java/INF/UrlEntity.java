@@ -14,6 +14,7 @@ public class UrlEntity {
     public Integer cantidad;
     public Collection<AccesoEntity> accesosById;
     public UsuarioEntity usuarioByIdUsuario;
+    //@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.SSS")
     public Timestamp fecha;
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
