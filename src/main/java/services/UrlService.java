@@ -12,7 +12,7 @@ import java.util.List;
 public class UrlService {
     EntityManager em = Inicio.getSession();
     private static List<UrlEntity> listaUrls = new ArrayList<>();
-    private static List<Urls> Urls = new ArrayList<>();
+    public static List<Urls> Urls = new ArrayList<>();
 
     public List<Urls> getAllLinks(){
         Urls.clear();
@@ -24,8 +24,9 @@ public class UrlService {
             link.cantidad = url.cantidad;
             link.code = url.code;
             link.fecha = url.fecha;
-            link.url = url.url.substring(0, 14);
+            link.url = url.url;
             link.usuario = url.usuarioByIdUsuario.username;
+            link.preview = url.preview;
             for (int i = 0; i<url.accesosById.size(); i++){
                 Accesos dato = new Accesos();
                 dato.id = url.accesosById.get(i).id;
@@ -36,7 +37,6 @@ public class UrlService {
                 dato.sistema = url.accesosById.get(i).sistema;
                 link.datos.add(dato);
             }
-            //link.accesosById = url.accesosById;
             Urls.add(link);
         }
         return Urls;
@@ -53,8 +53,9 @@ public class UrlService {
             link.cantidad = url.cantidad;
             link.code = url.code;
             link.fecha = url.fecha;
-            link.url = url.url.substring(0, 14);
+            link.url = url.url;
             link.usuario = url.usuarioByIdUsuario.username;
+            link.preview = url.preview;
             for (int i = 0; i<url.accesosById.size(); i++){
                 Accesos dato = new Accesos();
                 dato.id = url.accesosById.get(i).id;
@@ -65,7 +66,6 @@ public class UrlService {
                 dato.sistema = url.accesosById.get(i).sistema;
                 link.datos.add(dato);
             }
-            //link.accesosById = url.accesosById;
             Urls.add(link);
         }
         return Urls;
@@ -77,7 +77,4 @@ public class UrlService {
         }
         return instancia;
     }
-    /*public  String getAllLinks(){
-        return "Hola";
-    }*/
 }

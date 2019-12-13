@@ -17,6 +17,7 @@ public class UrlEntity {
     public UsuarioEntity usuarioByIdUsuario;
     //@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.SSS")
     public Timestamp fecha;
+    public String preview;
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
@@ -68,6 +69,16 @@ public class UrlEntity {
         this.fecha = fecha;
     }
 
+    @Basic
+    @Column(name = "PREVIEW", nullable = true)
+    public String getPreview() {
+        return preview;
+    }
+
+    public void setPreview(String preview) {
+        this.preview = preview;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -77,12 +88,13 @@ public class UrlEntity {
                 Objects.equals(cantidad, urlEntity.cantidad) &&
                 Objects.equals(code, urlEntity.code) &&
                 Objects.equals(url, urlEntity.url)&&
-                Objects.equals(fecha, urlEntity.fecha);
+                Objects.equals(fecha, urlEntity.fecha)&&
+                Objects.equals(preview,urlEntity.preview);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, code, url, cantidad, fecha);
+        return Objects.hash(id, code, url, cantidad, fecha, preview);
     }
 
     @OneToMany(mappedBy = "urlByIdUrl", cascade = CascadeType.ALL)

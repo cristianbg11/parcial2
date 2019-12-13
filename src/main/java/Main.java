@@ -1,18 +1,13 @@
 import INF.AccesoEntity;
 import INF.UrlEntity;
 import INF.UsuarioEntity;
-import utilities.*;
-import eu.bitwalker.useragentutils.Browser;
-import eu.bitwalker.useragentutils.UserAgent;
-import org.h2.tools.Server;
+import com.google.gson.Gson;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-import services.Inicio;
 import services.UrlService;
 import spark.ModelAndView;
-import spark.Request;
-import spark.Response;
 import spark.template.freemarker.FreeMarkerEngine;
+import utilities.Usuarios;
 
 import javax.persistence.EntityManager;
 import java.io.IOException;
@@ -23,51 +18,28 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static services.Inicio.*;
 import static spark.Spark.*;
 import static utilities.JsonUtil.json;
 
 public class Main {
 
-    public static ArrayList<UrlEntity> urlList = new ArrayList<UrlEntity>();
     public static void main(final String[] args) throws Exception {
         Class.forName("org.h2.Driver");
 
         port(getHerokuAssignedPort());
         startDb();
-        final Session secion = Inicio.getSession();
+        final Session secion = getSession();
         staticFiles.location("/publico");
-        EntityManager em = Inicio.getSession();
+        EntityManager em = getSession();
         InetAddress ip = InetAddress.getLocalHost();
         UrlService urlService = UrlService.getInstance();
 
         if (secion.find(UsuarioEntity.class, 1)==null){
-            UsuarioEntity anonimo = new UsuarioEntity();
-            anonimo.nombre = "Anonimo";
-            anonimo.username = "anonimo";
-            anonimo.password = "1234";
-            anonimo.administrador = false;
-            anonimo.email ="anonimo@gmail.com";
-            anonimo.edad = 0;
-            //anonimo.ip = ip.getHostAddress();
-            //anonimo.sistema = req.userAgent();
-            em.getTransaction().begin();
-            em.persist(anonimo);
-            em.getTransaction().commit();
-            UsuarioEntity admin = new UsuarioEntity();
-            admin.nombre = "Cristian";
-            admin.username = "admin";
-            admin.password = "1234";
-            admin.administrador = true;
-            admin.email ="cristianbg011@gmail.com";
-            admin.edad = 22;
-            em.getTransaction().begin();
-            em.persist(admin);
-            em.getTransaction().commit();
+            IniciarUsuario(em);
         }
 
         path("/rest", ()->{
@@ -77,26 +49,34 @@ public class Main {
             });
             get("/", (request, response) -> "RUTA API REST");
             path("/links", () -> {
-                /*
-                get("/pr", (request, response) -> {
-                    UrlEntity link = secion.find(UrlEntity.class, 1);
-                    return new Gson().toJson(link.url);
-                });
-                */
-                get("", (request, response) -> urlService.getAllLinks(), json());
 
-                get("/:id", (request, response) -> {
-                    UsuarioEntity persona = secion.find(UsuarioEntity.class, Integer.parseInt(request.params(":id")));
+                get("", (request, response) -> urlService.getAllLinks(), json());
+                get("/user/:id", (request, response) -> {
+                    final Session sesion = getSession();
+                    UsuarioEntity persona = sesion.find(UsuarioEntity.class, Integer.parseInt(request.params(":id")));
                     return urlService.getLinks(persona);
                 }, json());
 
             });
 
+            path("/url", () -> {
+                post("/crear/:id", "application/json", (request, response) -> {
+                    final Session sesion = getSession();
+                    UsuarioEntity usuarioEntity = sesion.find(UsuarioEntity.class, Integer.parseInt(request.params("id")));
+                    if (usuarioEntity == null){
+                        usuarioEntity = sesion.find(UsuarioEntity.class, 1);
+                    }
+                    UrlEntity urlEntity = new Gson().fromJson(request.body(), UrlEntity.class);
+                    acortar(em, usuarioEntity, urlEntity.url);
+                    return urlService.getAllLinks().get(urlService.getAllLinks().size() - 1);
+                }, json());
+            });
+
+
         });
 
         get("/", (request, response)-> {
-            //response.redirect("/login.html");
-            final Session sesion = Inicio.getSession();
+            final Session sesion = getSession();
             if (request.cookie("CookieUsuario") != null){
                 int id = Integer.parseInt((request.cookie("CookieUsuario")));
                 UsuarioEntity usuarioEntity = sesion.find(UsuarioEntity.class, id);
@@ -108,11 +88,9 @@ public class Main {
         });
 
         get("/visitar", (request, response)-> {
-            //response.redirect("/login.html");
-            final Session sesion = Inicio.getSession();
+            final Session sesion = getSession();
             UsuarioEntity usuario = sesion.find(UsuarioEntity.class, 1);
             spark.Session session=request.session(true);
-            session.attribute("usuario", usuario);
             session.attribute("usuario", usuario);
             response.redirect("/index");
             return "anonimo";
@@ -148,16 +126,7 @@ public class Main {
         });
 
         post("/insertar", (request, response) -> {
-            em.getTransaction().begin();
-            UsuarioEntity usuario = new UsuarioEntity();
-            usuario.username = request.queryParams("username");
-            usuario.nombre = request.queryParams("nombre");
-            usuario.password = request.queryParams("password");
-            usuario.administrador = Boolean.parseBoolean(request.queryParams("administrador"));
-            usuario.email = request.queryParams("email");
-            usuario.edad = Integer.valueOf(request.queryParams("edad"));
-            em.persist(usuario);
-            em.getTransaction().commit();
+            InsertarUsuario(em, request);
             response.redirect("/");
             return "Usuario Creado";
         }); // Crea un usuario
@@ -168,7 +137,7 @@ public class Main {
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
 
             if (usuario==null){
-                final Session sesion = Inicio.getSession();
+                final Session sesion = getSession();
                 usuario = sesion.find(UsuarioEntity.class, 1);
                 session.attribute("usuario", usuario);
             } else if (usuario.id==1){
@@ -189,40 +158,27 @@ public class Main {
             Map<String, Object> attributes = new HashMap<>();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
-            if (usuario==null){
-                final Session sesion = Inicio.getSession();
-                usuario = sesion.find(UsuarioEntity.class, 1);
-                session.attribute("usuario", usuario);
-            }else {
-                session.attribute("usuario", usuario);
-            }
+            Askuser(usuario, session);
             Query query = (Query) em.createQuery("select distinct a.urlByIdUrl from AccesoEntity a where a.usuarioByIdUsuario = :user");
             query.setParameter("user", usuario);
             List<UrlEntity> urls = query.getResultList();
             Query query1 = (Query) em.createQuery("select u from UrlEntity u where u.usuarioByIdUsuario = :user");
             query1.setParameter("user", usuario);
             List<UrlEntity> acortados = query1.getResultList();
-            //Timestamp fecha = usuario.accesosById.get(usuario.accesosById.size()-1).fecha;
             boolean profile = true;
             attributes.put("profile", profile);
             attributes.put("usuario",usuario);
             attributes.put("urls", urls);
             attributes.put("acortados", acortados);
-            //attributes.put("fecha", fecha);
             return new ModelAndView(attributes, "profile.ftl");
         } , new FreeMarkerEngine());
 
         get("/ver", (request, response) -> {
-            final Session sesion = Inicio.getSession();
+            final Session sesion = getSession();
             Map<String, Object> attributes = new HashMap<>();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
-            if (usuario==null){
-                usuario = sesion.find(UsuarioEntity.class, 1);
-                session.attribute("usuario", usuario);
-            }else {
-                session.attribute("usuario", usuario);
-            }
+            Askuser(usuario, session);
             int id = Integer.parseInt(request.queryParams("id_user"));
             boolean profile = false;
             UsuarioEntity user = sesion.find(UsuarioEntity.class, id);
@@ -246,13 +202,8 @@ public class Main {
             Map<String, Object> attributes = new HashMap<>();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
-            if (usuario==null){
-                final Session sesion = Inicio.getSession();
-                usuario = sesion.find(UsuarioEntity.class, 1);
-                session.attribute("usuario", usuario);
-            }else {
-                session.attribute("usuario", usuario);
-            }
+            Askuser(usuario, session);
+
             if (usuario.administrador==false){
                 response.redirect("/index");
             }
@@ -267,13 +218,7 @@ public class Main {
             Map<String, Object> attributes = new HashMap<>();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
-            if (usuario==null){
-                final Session sesion = Inicio.getSession();
-                usuario = sesion.find(UsuarioEntity.class, 1);
-                session.attribute("usuario", usuario);
-            }else {
-                session.attribute("usuario", usuario);
-            }
+            Askuser(usuario, session);
             if (usuario.administrador==false){
                 response.redirect("/index");
             }
@@ -290,20 +235,8 @@ public class Main {
             } else {
                 spark.Session session=request.session(true);
                 UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
-                em.getTransaction().begin();
-                int n = 100000 + new Random().nextInt(900000);
-                UrlEntity url = new UrlEntity();
-                url.code = idToShortURL(n);
-                url.url = request.queryParams("url");
-                url.cantidad = 0;
-                url.usuarioByIdUsuario = usuario;
-                Date date = new Date();
-                url.fecha = new Timestamp(date.getTime());
-                em.persist(url);
-                em.getTransaction().commit();
-                if(usuario.id==1){
-                    urlList.add(url);
-                }
+                String url = request.queryParams("url");
+                acortar(em, usuario, url);
             }
             response.redirect("/index");
             return "Usuario Creado";
@@ -319,50 +252,29 @@ public class Main {
         }); //Finaliza Sesión
 
         get("/delete", (request, response)-> {
-            final Session sesion = Inicio.getSession();
-            int id = Integer.parseInt(request.queryParams("id_url"));
-            UrlEntity url = sesion.find(UrlEntity.class, id);
-            sesion.getTransaction().begin();
-            sesion.remove(url);
-            sesion.getTransaction().commit();
+            borrarUrl(request);
             response.redirect("/urls");
             return "Url Borrado";
         });
 
         get("/deleteuser", (request, response)-> {
-            final Session sesion = Inicio.getSession();
-            int id = Integer.parseInt(request.queryParams("id_user"));
-            UsuarioEntity usuario = sesion.find(UsuarioEntity.class, id);
-            sesion.getTransaction().begin();
-            sesion.remove(usuario);
-            sesion.getTransaction().commit();
+            borrarUsuario(request);
             response.redirect("/usuarios");
             return "Url Borrado";
         });
 
         get("/update", (request, response)-> {
-            final Session sesion = Inicio.getSession();
-            int id = Integer.parseInt(request.queryParams("id_user"));
-            UsuarioEntity usuario = sesion.find(UsuarioEntity.class, id);
-            em.getTransaction().begin();
-            usuario.setAdministrador(true);
-            em.merge(usuario);
-            em.getTransaction().commit();
+            makeAdmin(em, request);
             response.redirect("/usuarios");
             return "Usuario Actualizado";
         });
 
         get("/stats", (request, response)-> {
-            final Session sesion = Inicio.getSession();
+            final Session sesion = getSession();
             Map<String, Object> attributes = new HashMap<>();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
-            if (usuario==null){
-                usuario = sesion.find(UsuarioEntity.class, 1);
-                session.attribute("usuario", usuario);
-            }else {
-                session.attribute("usuario", usuario);
-            }
+            Askuser(usuario, session);
             if (usuario.administrador==false){
                 response.redirect("/index");
             }
@@ -412,28 +324,13 @@ public class Main {
         } , new FreeMarkerEngine());
 
         get("/deleteacceso", (request, response)-> {
-            final Session sesion = Inicio.getSession();
+            final Session sesion = getSession();
             int id = Integer.parseInt(request.queryParams("id_acceso"));
             AccesoEntity acceso = sesion.find(AccesoEntity.class, id);
-            UrlEntity url = sesion.find(UrlEntity.class, acceso.urlByIdUrl.id);
-            url.cantidad--;
-            em.getTransaction().begin();
-            em.merge(url);
-            em.getTransaction().commit();
-            sesion.getTransaction().begin();
-            sesion.remove(acceso);
-            sesion.getTransaction().commit();
+            borrarAcceso(em, sesion, acceso);
             response.redirect("/stats?id_url="+acceso.urlByIdUrl.id);
             return "acceso Borrado";
         });
-
-        path("/user", ()->{
-            get("/:id", (request, response) -> {
-
-                return "rest";
-            });
-        });
-
 
         path("/r", ()->{
             get("/:code", ((request, response) -> {
@@ -445,13 +342,9 @@ public class Main {
                 if (url==null){
                     return "Url eliminada o no existe";
                 }
-                final Session sesion = Inicio.getSession();
                 spark.Session session=request.session(true);
                 UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
-                if (usuario==null){
-                    usuario = sesion.find(UsuarioEntity.class, 1);
-                    session.attribute("usuario", usuario);
-                }
+                Askuser(usuario, session);
                 em.getTransaction().commit();
                 AccesoInsert(em, response, usuario, url, request, ip);
                 return "redirecionado";
@@ -460,90 +353,9 @@ public class Main {
 
     }
 
-    private static void AccesoInsert(EntityManager em, Response response, UsuarioEntity usuario, UrlEntity url, Request request, InetAddress ip) {
-        url.cantidad++;
-        em.getTransaction().begin();
-        em.merge(url);
-        em.getTransaction().commit();
-        em.getTransaction().begin();
-        AccesoEntity acceso = new AccesoEntity();
-        Date date = new Date();
-        acceso.fecha = new Timestamp(date.getTime());
-        acceso.urlByIdUrl = url;
-        acceso.usuarioByIdUsuario = usuario;
-        UserAgent userAgent = UserAgent.parseUserAgentString(request.userAgent());
-        Browser browser = userAgent.getBrowser();
-        acceso.navegador = browser.getName();
-        acceso.sistema = System.getProperty("os.name");
-        acceso.ip = ip.getHostAddress();
-        em.persist(acceso);
-        em.getTransaction().commit();
-        response.redirect(url.url);
-    }
-
-    public static void startDb() {
-        try {
-            Server.createTcpServer("-tcpPort",
-                    "8081",
-                    "-tcpAllowOthers",
-                    "-tcpDaemon").start();
-        }catch (SQLException ex){
-            System.out.println("Problema con la base de datos: "+ex.getMessage());
-        }
-    }
-
-    private static String renderContent(String htmlFile) throws IOException, URISyntaxException {
+    public static String renderContent(String htmlFile) throws IOException, URISyntaxException {
         URL url = Main.class.getResource(htmlFile);
         Path path = Paths.get(url.toURI());
         return new String(Files.readAllBytes(path), Charset.defaultCharset());
-    }
-
-    static int getHerokuAssignedPort() {
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        if (processBuilder.environment().get("PORT") != null) {
-            return Integer.parseInt(processBuilder.environment().get("PORT"));
-        }
-        return 8080; //Retorna el puerto por defecto en caso de no estar en Heroku.
-    }
-
-    public static String idToShortURL(int n)
-    {
-        // Map to store 62 possible characters
-        char map[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
-
-        StringBuffer shorturl = new StringBuffer();
-
-        // Convert given integer id to a base 62 number
-        while (n > 0)
-        {
-            // use above map to store actual character
-            // in short url
-            shorturl.append(map[n % 62]);
-            n = n / 62;
-        }
-
-        // Reverse shortURL to complete base conversion
-        return shorturl.reverse().toString();
-    }
-
-    // Function to get integer ID back from a short url
-    static int shortURLtoID(String shortURL)
-    {
-        int id = 0; // initialize result
-
-        // A simple base conversion logic
-        for (int i = 0; i < shortURL.length(); i++)
-        {
-            if ('a' <= shortURL.charAt(i) &&
-                    shortURL.charAt(i) <= 'z')
-                id = id * 62 + shortURL.charAt(i) - 'a';
-            if ('A' <= shortURL.charAt(i) &&
-                    shortURL.charAt(i) <= 'Z')
-                id = id * 62 + shortURL.charAt(i) - 'A' + 26;
-            if ('0' <= shortURL.charAt(i) &&
-                    shortURL.charAt(i) <= '9')
-                id = id * 62 + shortURL.charAt(i) - '0' + 52;
-        }
-        return id;
     }
 }

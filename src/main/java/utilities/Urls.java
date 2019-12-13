@@ -12,6 +12,7 @@ public class Urls {
     public Timestamp fecha;
     public List<Accesos> datos = new ArrayList<>();
     public String usuario;
+    public String preview;
 
     public int getId() {
         return id;
@@ -67,5 +68,13 @@ public class Urls {
 
     public void setUsuario(String usuario) {
         this.usuario = usuario;
+    }
+
+    public String getPreview() {
+        return preview;
+    }
+
+    public void setPreview(String preview) {
+        this.preview = preview;
     }
 }
