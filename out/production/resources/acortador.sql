@@ -1,0 +1,58 @@
+create schema if not exists PUBLIC;
+
+create table USUARIO
+(
+	ID INTEGER auto_increment
+		primary key,
+	ADMINISTRADOR BOOLEAN,
+	EDAD INTEGER,
+	EMAIL VARCHAR(100),
+	LATITUD VARCHAR(100),
+	LONGITUD VARCHAR(100),
+	NOMBRE VARCHAR(100),
+	PASSWORD VARCHAR(50),
+	PERFIL CLOB,
+	USERNAME VARCHAR(50)
+);
+
+create table COMENTARIO
+(
+	ID INTEGER auto_increment
+		primary key,
+	COMENTARIO CLOB,
+	USERNAME VARCHAR(50),
+	ID_USUARIO INTEGER,
+	constraint FKGDCH5NDUO8BO4QBDYCSRSR4TN
+		foreign key (ID_USUARIO) references USUARIO (ID)
+);
+
+create table URL
+(
+	ID INTEGER auto_increment
+		primary key,
+	CANTIDAD INTEGER,
+	CODE VARCHAR(10),
+	FECHA TIMESTAMP,
+	URL CLOB,
+	ID_USUARIO INTEGER,
+	PREVIEW CLOB,
+	constraint FKIXXK0D01VJ66N5SHXO29183CX
+		foreign key (ID_USUARIO) references USUARIO (ID)
+);
+
+create table ACCESO
+(
+	ID INTEGER auto_increment
+		primary key,
+	FECHA TIMESTAMP,
+	IP VARCHAR(50),
+	NAVEGADOR VARCHAR(255),
+	SISTEMA VARCHAR(255),
+	ID_URL INTEGER,
+	ID_USUARIO INTEGER,
+	constraint FK8EDSD9SXEIQ4SSJWUO6DGNLQP
+		foreign key (ID_URL) references URL (ID),
+	constraint FKAMO5QMN4STG03U0B33Y9SJEEY
+		foreign key (ID_USUARIO) references USUARIO (ID)
+);
+
