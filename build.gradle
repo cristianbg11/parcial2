@@ -60,6 +60,9 @@ dependencies {
     // https://mvnrepository.com/artifact/javax.xml.ws/jaxws-api
     compile group: 'javax.xml.ws', name: 'jaxws-api', version: '2.3.1'
 
+    // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-http-spi
+    compile group: 'org.eclipse.jetty', name: 'jetty-http-spi', version: '9.4.4.v20170414'
+
 }
 
 task stage(dependsOn: ['build', 'clean'])
