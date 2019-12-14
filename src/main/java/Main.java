@@ -86,7 +86,7 @@ public class Main {
                 session.attribute("usuario", usuarioEntity);
                 response.redirect("/index");
             }
-            return renderContent("publico/login.html");
+            return renderContent("/publico/login.html");
         });
 
         get("/visitar", (request, response)-> {
