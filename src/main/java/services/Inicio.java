@@ -154,7 +154,7 @@ public class Inicio {
         sesion.getTransaction().commit();
     }
 
-    public static void Askuser(UsuarioEntity usuario, spark.Session session){
+    public static UsuarioEntity Askuser(UsuarioEntity usuario, spark.Session session){
         if (usuario==null){
             final Session sesion = Inicio.getSession();
             usuario = sesion.find(UsuarioEntity.class, 1);
@@ -162,6 +162,7 @@ public class Inicio {
         }else {
             session.attribute("usuario", usuario);
         }
+        return (UsuarioEntity)(session.attribute("usuario"));
     }
 
     public static void startDb() {

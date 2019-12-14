@@ -121,6 +121,7 @@ public class Main {
 
                     }
                     response.redirect("/index");
+                    return 0;
                 }
             }
             response.redirect("/");
@@ -160,7 +161,7 @@ public class Main {
             Map<String, Object> attributes = new HashMap<>();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
-            Askuser(usuario, session);
+            usuario = Askuser(usuario, session);
             Query query = (Query) em.createQuery("select distinct a.urlByIdUrl from AccesoEntity a where a.usuarioByIdUsuario = :user");
             query.setParameter("user", usuario);
             List<UrlEntity> urls = query.getResultList();
@@ -180,7 +181,7 @@ public class Main {
             Map<String, Object> attributes = new HashMap<>();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
-            Askuser(usuario, session);
+            usuario = Askuser(usuario, session);
             int id = Integer.parseInt(request.queryParams("id_user"));
             boolean profile = false;
             UsuarioEntity user = sesion.find(UsuarioEntity.class, id);
@@ -204,7 +205,7 @@ public class Main {
             Map<String, Object> attributes = new HashMap<>();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
-            Askuser(usuario, session);
+            usuario = Askuser(usuario, session);
 
             if (usuario.administrador==false){
                 response.redirect("/index");
@@ -220,7 +221,7 @@ public class Main {
             Map<String, Object> attributes = new HashMap<>();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
-            Askuser(usuario, session);
+            usuario = Askuser(usuario, session);
             if (usuario.administrador==false){
                 response.redirect("/index");
             }
@@ -276,8 +277,8 @@ public class Main {
             Map<String, Object> attributes = new HashMap<>();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
-            Askuser(usuario, session);
-            if (usuario.administrador==false){
+            usuario = Askuser(usuario, session);
+            if (usuario.id == 1){
                 response.redirect("/index");
             }
             int id = Integer.parseInt(request.queryParams("id_url"));
@@ -342,13 +343,13 @@ public class Main {
                 query.setParameter("code", codigo);
                 UrlEntity url = query.uniqueResult();
                 if (url==null){
-                    response.redirect("/index");
+                    response.redirect("/404");
                     em.getTransaction().commit();
                     return "Url eliminada o no existe";
                 } else {
                     spark.Session session=request.session(true);
                     UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
-                    Askuser(usuario, session);
+                    usuario = Askuser(usuario, session);
                     em.getTransaction().commit();
                     AccesoInsert(em, response, usuario, url, request, ip);
                     return "redirecionado";
@@ -356,7 +357,17 @@ public class Main {
             }));
         });
 
+        get("/404", (request, response)-> {
+            Map<String, Object> attributes = new HashMap<>();
+            spark.Session session=request.session(true);
+            UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+            usuario = Askuser(usuario, session);
+            attributes.put("usuario",usuario);
+            return new ModelAndView(attributes, "404.ftl");
+        } , new FreeMarkerEngine());
+
         get("*", (request, response) -> {
+            response.redirect("/404");
             return "404!!";
         });
 
