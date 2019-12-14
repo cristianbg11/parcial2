@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 
 public class Soap {
     public static void init() throws Exception {
-        /*
+
         //inicializando el servidor
         Server server = new Server(9090);
         ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
@@ -28,8 +28,8 @@ public class Soap {
         Endpoint endpoint = Endpoint.create(wsa);
         endpoint.publish(context);
         // Para acceder al wsdl en http://localhost:9090/ws/urls?wsdl
-        */
-        Endpoint.publish("https://acortadorparcial2.herokuapp.com/ws/urls", new UrlWebServiceImpl());
+        
+        //Endpoint.publish("http://localhost:8080/ws/urls", new UrlWebServiceImpl());
     }
 
     private static HttpContext build(Server server, String contextString) throws Exception {
