@@ -1,8 +1,12 @@
 package utilities;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.sql.Timestamp;
 
-public class Accesos {
+
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Accesos  {
     public int id;
     public Timestamp fecha;
     public String usuario;

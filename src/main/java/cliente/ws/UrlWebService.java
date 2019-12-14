@@ -1,6 +1,5 @@
 package cliente.ws;
 
-import INF.UrlEntity;
 import utilities.Urls;
 
 import javax.jws.WebMethod;
@@ -12,11 +11,11 @@ import javax.jws.soap.SOAPBinding;
 public interface UrlWebService {
 
     @WebMethod
-    public boolean addUrl(UrlEntity u);
+    public Urls addUrl(String url, int id);
 
     @WebMethod
-    public UrlEntity getUrl(int id);
+    public Urls[] getAllUrls();
 
     @WebMethod
-    public UrlEntity[] getAllUrls();
+    public Urls[] getUrls(int id);
 }

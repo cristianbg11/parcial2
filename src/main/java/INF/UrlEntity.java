@@ -5,7 +5,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -119,10 +118,5 @@ public class UrlEntity implements Serializable {
 
     public void setUsuarioByIdUsuario(UsuarioEntity usuarioByIdUsuario) {
         this.usuarioByIdUsuario = usuarioByIdUsuario;
-    }
-
-    @Override
-    public String toString(){
-        return id+"::"+code+"::"+url+"::"+cantidad+"::"+fecha+"::"+usuarioByIdUsuario.username+"::"+accesosById+"::"+preview;
     }
 }

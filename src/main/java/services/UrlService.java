@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class UrlService {
     EntityManager em = Inicio.getSession();
     private static List<UrlEntity> listaUrls = new ArrayList<>();

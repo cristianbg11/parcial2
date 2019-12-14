@@ -1,11 +1,12 @@
 package utilities;
 
-import java.io.Serializable;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-//@XmlRootElement(name="urls")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Urls {
     public int id;
     public String code;
@@ -15,22 +16,6 @@ public class Urls {
     public List<Accesos> datos = new ArrayList<>();
     public String usuario;
     public String preview;
-    /*
-    public Urls(int id, String code, String url, Integer cantidad, Timestamp fecha, List<Accesos> datos, String usuario, String preview ){
-        this.id = id;
-        this.code = code;
-        this.url = url;
-        this.cantidad = cantidad;
-        this.fecha = fecha;
-        this.datos = datos;
-        this.usuario = usuario;
-        this.preview = preview;
-    }
-
-    public Urls() {
-
-    }
-     */
 
     public int getId() {
         return id;
@@ -98,6 +83,7 @@ public class Urls {
 
     @Override
     public String toString(){
-        return id+"::"+code+"::"+url+"::"+cantidad+"::"+fecha+"::"+usuario+"::"+preview;
+        return id+"::"+code+"::"+url+"::"+cantidad+"::"+fecha+"::"+datos+"::"+usuario+"::"+preview;
     }
+
 }

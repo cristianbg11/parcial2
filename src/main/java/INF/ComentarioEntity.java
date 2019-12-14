@@ -1,10 +1,13 @@
 package INF;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.util.Objects;
 
 @Entity
 @Table(name = "COMENTARIO", schema = "PUBLIC", catalog = "ACORTADOR")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ComentarioEntity {
     private int id;
     private String comentario;
