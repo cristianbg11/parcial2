@@ -78,6 +78,7 @@ public class Main {
         });
 
         get("/", (request, response)-> {
+            Map<String, Object> attributes = new HashMap<>();
             final Session sesion = getSession();
             if (request.cookie("CookieUsuario") != null){
                 int id = Integer.parseInt((request.cookie("CookieUsuario")));
@@ -86,8 +87,11 @@ public class Main {
                 session.attribute("usuario", usuarioEntity);
                 response.redirect("/index");
             }
-            return renderContent("/publico/login.html");
-        });
+            String ok = "ok";
+            attributes.put("ok", ok);
+            return new ModelAndView(attributes,"login.ftl");
+            //return renderContent("/spark/template/freemarker/login.ftl");
+        } , new FreeMarkerEngine());
 
         get("/visitar", (request, response)-> {
             final Session sesion = getSession();
