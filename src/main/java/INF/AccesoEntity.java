@@ -1,11 +1,14 @@
 package INF;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
 @Table(name = "ACCESO", schema = "PUBLIC", catalog = "ACORTADOR")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AccesoEntity {
     public int id;
     public Timestamp fecha;

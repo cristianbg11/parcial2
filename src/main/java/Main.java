@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import services.UrlService;
+import soap.Soap;
 import spark.ModelAndView;
 import spark.template.freemarker.FreeMarkerEngine;
 import utilities.Usuarios;
@@ -32,6 +33,7 @@ public class Main {
 
         port(getHerokuAssignedPort());
         startDb();
+        Soap.init();
         final Session secion = getSession();
         staticFiles.location("/publico");
         EntityManager em = getSession();
@@ -340,15 +342,22 @@ public class Main {
                 query.setParameter("code", codigo);
                 UrlEntity url = query.uniqueResult();
                 if (url==null){
+                    response.redirect("/index");
+                    em.getTransaction().commit();
                     return "Url eliminada o no existe";
+                } else {
+                    spark.Session session=request.session(true);
+                    UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+                    Askuser(usuario, session);
+                    em.getTransaction().commit();
+                    AccesoInsert(em, response, usuario, url, request, ip);
+                    return "redirecionado";
                 }
-                spark.Session session=request.session(true);
-                UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
-                Askuser(usuario, session);
-                em.getTransaction().commit();
-                AccesoInsert(em, response, usuario, url, request, ip);
-                return "redirecionado";
             }));
+        });
+
+        get("*", (request, response) -> {
+            return "404!!";
         });
 
     }

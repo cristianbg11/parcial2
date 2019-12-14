@@ -53,6 +53,13 @@ dependencies {
     //compile group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.10'
 
     compile group: 'org.simpleframework', name: 'simple-xml', version: '2.7.1'
+
+    // https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+
+    // https://mvnrepository.com/artifact/javax.xml.ws/jaxws-api
+    compile group: 'javax.xml.ws', name: 'jaxws-api', version: '2.3.1'
+
 }
 
 task stage(dependsOn: ['build', 'clean'])

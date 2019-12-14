@@ -1,6 +1,9 @@
 package INF;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
@@ -8,7 +11,9 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "URL", schema = "PUBLIC", catalog = "ACORTADOR")
-public class UrlEntity {
+@XmlAccessorType(XmlAccessType.FIELD)
+public class UrlEntity implements Serializable {
+    private static final long serialVersionUID = -5577579081118070434L;
     public int id;
     public String code;
     public String url;
@@ -114,5 +119,10 @@ public class UrlEntity {
 
     public void setUsuarioByIdUsuario(UsuarioEntity usuarioByIdUsuario) {
         this.usuarioByIdUsuario = usuarioByIdUsuario;
+    }
+
+    @Override
+    public String toString(){
+        return id+"::"+code+"::"+url+"::"+cantidad+"::"+fecha+"::"+usuarioByIdUsuario.username+"::"+accesosById+"::"+preview;
     }
 }
