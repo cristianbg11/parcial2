@@ -140,7 +140,11 @@
                                         </#if>
                                     </span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg"></a>
                                     <div
-                                        class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu"><a class="dropdown-item" role="presentation" href="/perfil"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>Perfil</a><a class="dropdown-item" role="presentation"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Settings</a>
+                                        class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu">
+                                        <#if usuario.id != 1>
+                                            <a class="dropdown-item" role="presentation" href="/perfil"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Perfil</a>
+                                        </#if>
+                                        <a class="dropdown-item" role="presentation"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Settings</a>
                                         <a
                                             class="dropdown-item" role="presentation" href="#"><i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Activity log</a>
                                             <div class="dropdown-divider"></div><a class="dropdown-item" role="presentation" href="/salir"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Salir</a></div>
@@ -151,7 +155,7 @@
             </nav>
             <div class="container-fluid">
                 <h3 class="text-dark mb-1">Estadisticas</h3>
-                <h5 class="text-dark mb-1">localhost:8080/r/${url.code}</h5>
+                <h5 class="text-dark mb-1">https://cut/r/${url.code}</h5>
             </div>
                 <table id="example" class="table table-striped table-bordered" width="100%">
                     <thead>

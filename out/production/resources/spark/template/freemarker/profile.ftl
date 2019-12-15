@@ -134,7 +134,11 @@
                                         </#if>
                                     </span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg"></a>
                                     <div
-                                        class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu"><a class="dropdown-item" role="presentation" href="/perfil"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Perfil</a><a class="dropdown-item" role="presentation" href="#"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Settings</a>
+                                        class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu">
+                                        <#if usuario.id != 1>
+                                            <a class="dropdown-item" role="presentation" href="/perfil"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Perfil</a>
+                                        </#if>
+                                        <a class="dropdown-item" role="presentation" href="#"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Settings</a>
                                         <a
                                             class="dropdown-item" role="presentation" href="#"><i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Activity log</a>
                                             <div class="dropdown-divider"></div><a class="dropdown-item" role="presentation" href="/salir"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Salir</a></div>
@@ -161,7 +165,7 @@
                             <div class="card-body">
                                 <#if acortados?has_content>
                                     <#list acortados as acortado>
-                                        <a href="/r/${acortado.code}" target="_blank"><h4 class="small font-weight-bold">localhost:8080/r/${acortado.code}</h4></a>
+                                        <a href="/r/${acortado.code}" target="_blank"><h4 class="small font-weight-bold">https://cut/r/${acortado.code}</h4></a>
                                     </#list>
                                 </#if>
                             </div>
@@ -173,7 +177,7 @@
                             <div class="card-body">
                                 <#if urls?has_content>
                                     <#list urls as url>
-                                        <a href="/r/${url.code}" target="_blank"><h4 class="small font-weight-bold">localhost:8080/r/${url.code}</h4></a>
+                                        <a href="/r/${url.code}" target="_blank"><h4 class="small font-weight-bold">https://cut/r/${url.code}</h4></a>
                                     </#list>
                                 </#if>
                             </div>
