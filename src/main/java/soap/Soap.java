@@ -6,13 +6,32 @@ import org.eclipse.jetty.http.spi.HttpSpiContextHandler;
 import org.eclipse.jetty.http.spi.JettyHttpContext;
 import org.eclipse.jetty.http.spi.JettyHttpServer;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 
 import javax.xml.ws.Endpoint;
 import java.lang.reflect.Method;
 
+import static services.Inicio.getHerokuAssignedPort;
+
 public class Soap {
     public static void init() throws Exception {
-        Endpoint.publish("http://0.0.0.0/ws/urls", new UrlWebServiceImpl());
+
+        //inicializando el servidor
+        Server server = new Server(9090);
+        ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
+        server.setHandler(contextHandlerCollection);
+        server.start();
+
+        //El contexto donde estoy agrupando.
+        HttpContext context = build(server, "/ws");
+
+        //El o los servicios que estoy agrupando en ese contexto
+        UrlWebServiceImpl wsa = new UrlWebServiceImpl();
+        Endpoint endpoint = Endpoint.create(wsa);
+        endpoint.publish(context);
+        // Para acceder al wsdl en http://localhost:9090/ws/urls?wsdl
+
+        //Endpoint.publish("http://localhost:0.0.0.0/ws/urls", new UrlWebServiceImpl());
     }
 
     private static HttpContext build(Server server, String contextString) throws Exception {
