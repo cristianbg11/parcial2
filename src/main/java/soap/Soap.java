@@ -11,11 +11,13 @@ import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import javax.xml.ws.Endpoint;
 import java.lang.reflect.Method;
 
+import static services.Inicio.getHerokuAssignedPort;
+
 public class Soap {
     public static void init() throws Exception {
 
         //inicializando el servidor
-        Server server = new Server(9090);
+        Server server = new Server(getHerokuAssignedPort());
         ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
         server.setHandler(contextHandlerCollection);
         server.start();
