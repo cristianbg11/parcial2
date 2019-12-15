@@ -155,7 +155,7 @@
             </nav>
             <div class="container-fluid">
                 <h3 class="text-dark mb-1">Estadisticas</h3>
-                <h5 class="text-dark mb-1">localhost:8080/r/${url.code}</h5>
+                <h5 class="text-dark mb-1">acortadorparcial2.herokuapp/r/${url.code}</h5>
             </div>
                 <table id="example" class="table table-striped table-bordered" width="100%">
                     <thead>
