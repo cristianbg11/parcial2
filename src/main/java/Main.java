@@ -369,7 +369,7 @@ public class Main {
             return new ModelAndView(attributes, "404.ftl");
         } , new FreeMarkerEngine());
 
-        get("/", (request, response) -> {
+        get("/soap", (request, response) -> {
             Soap.init();
             return "404!!";
         });

@@ -6,7 +6,8 @@ import javax.xml.ws.Endpoint;
 
 public class Soap {
     public static void init() throws Exception {
-        Endpoint.publish("https://acortadorparcial2.herokuapp.com/ws/urls", new UrlWebServiceImpl());
+
+        Endpoint.publish("http://0.0.0.0/ws/urls", new UrlWebServiceImpl());
     }
 
 }
