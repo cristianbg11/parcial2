@@ -165,7 +165,7 @@
                             <div class="card-body">
                                 <#if acortados?has_content>
                                     <#list acortados as acortado>
-                                        <a href="/r/${acortado.code}" target="_blank"><h4 class="small font-weight-bold">acortadorparcial2.herokuapp/r/${acortado.code}</h4></a>
+                                        <a href="/r/${acortado.code}" target="_blank"><h4 class="small font-weight-bold">https://cut/r/${acortado.code}</h4></a>
                                     </#list>
                                 </#if>
                             </div>
@@ -177,7 +177,7 @@
                             <div class="card-body">
                                 <#if urls?has_content>
                                     <#list urls as url>
-                                        <a href="/r/${url.code}" target="_blank"><h4 class="small font-weight-bold">acortadorparcial2.herokuapp/r/${url.code}</h4></a>
+                                        <a href="/r/${url.code}" target="_blank"><h4 class="small font-weight-bold">https://cut/r/${url.code}</h4></a>
                                     </#list>
                                 </#if>
                             </div>

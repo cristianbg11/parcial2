@@ -178,7 +178,7 @@
                                     <#list urls as url>
                                         <tr>
                                             <td><a href="/stats?id_url=${url.id}"><i class="fas fa-laugh-wink" style="margin-left: 5px;"></i></a>
-                                                <a href="/r/${url.code}" target="_blank">acortadorparcial2.herokuapp/r/${url.code}</a>
+                                                <a href="/r/${url.code}" target="_blank">https://cut/r/${url.code}</a>
                                             </td>
                                             <td><#if url.url?length gt 40>
                                                     ${url.url[0..40]}

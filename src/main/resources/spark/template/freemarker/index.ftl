@@ -174,7 +174,7 @@
                                             </#if>
                                         </a>
                                     </td>
-                                    <td class="text-right"><a href="/r/${url.code}" target="_blank">acortadorparcial2.herokuapp/r/${url.code}</a>
+                                    <td class="text-right"><a href="/r/${url.code}" target="_blank">https://cut/r/${url.code}</a>
                                         <#if usuario.id !=1>
                                             <a href="/stats?id_url=${url.id}"><i class="fas fa-laugh-wink" style="margin-left: 5px;"></i></a>
                                         </#if>
