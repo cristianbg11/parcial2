@@ -33,7 +33,7 @@ public class Main {
 
         port(getHerokuAssignedPort());
         startDb();
-
+        Soap.init();
         final Session secion = getSession();
         staticFiles.location("/publico");
         EntityManager em = getSession();
@@ -370,9 +370,9 @@ public class Main {
             return new ModelAndView(attributes, "404.ftl");
         } , new FreeMarkerEngine());
 
-        get("/soap", (request, response) -> {
-
-            return Soap.init();
+        get("*", (request, response) -> {
+            response.redirect("/404");
+            return "404!!";
         });
 
     }
