@@ -31,7 +31,7 @@ public class Main {
     public static void main(final String[] args) throws Exception {
         Class.forName("org.h2.Driver");
 
-        port(getHerokuAssignedPort());
+        //port(getHerokuAssignedPort());
         startDb();
         Soap.init();
         final Session secion = getSession();
