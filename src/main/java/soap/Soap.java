@@ -18,9 +18,9 @@ import static services.Inicio.getHerokuAssignedPort;
 
 public class Soap {
     public static void init() throws Exception {
-        /*
+
         //inicializando el servidor
-        Server server = new Server(getHerokuAssignedPort());
+        Server server = new Server(8082);
         ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
         server.setHandler(contextHandlerCollection);
         server.start();
@@ -34,13 +34,14 @@ public class Soap {
         endpoint.publish(context);
         // Para acceder al wsdl en http://localhost:9090/ws/urls?wsdl
 
+        /*
         final HttpServer httpServer = HttpServer.create(new InetSocketAddress(InetAddress.getByName("0.0.0.0"), getHerokuAssignedPort()), 16);
         final Endpoint barEndpoint = Endpoint.create(new UrlWebServiceImpl());
         barEndpoint.publish(httpServer.createContext("/ws"));
 
         httpServer.start();
-         */
-        Endpoint.publish("https://acortadorparcial2.herokuapp.com:9090/ws/urls", new UrlWebServiceImpl());
+        */
+        //Endpoint.publish("http://0.0.0.0:"+getHerokuAssignedPort()+"/ws/urls", new UrlWebServiceImpl());
     }
 
     private static HttpContext build(Server server, String contextString) throws Exception {
