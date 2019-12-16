@@ -4,14 +4,17 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Usuarios {
+public class UserUrl {
+    public int id;
     public String username;
+    public String password;
     public int cant;
+    public String url;
 
-    public Usuarios(String s, int i) {
+    public UserUrl(String s, int i) {
     }
 
-    public Usuarios() {
+    public UserUrl() {
 
     }
 
@@ -44,5 +47,29 @@ public class Usuarios {
     @Override
     public String toString() {
         return super.toString();
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

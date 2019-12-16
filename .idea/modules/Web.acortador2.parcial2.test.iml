@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module external.linked.project.id="parcial2:test" external.linked.project.path="$MODULE_DIR$/../.." external.root.project.path="$MODULE_DIR$/../.." external.system.id="GRADLE" external.system.module.group="pucmm" external.system.module.type="sourceSet" external.system.module.version="1.0-SNAPSHOT" type="JAVA_MODULE" version="4">
+  <component name="ExternalSystem" linkedProjectPath="$MODULE_DIR$/../../../JAX-WS-Deploy-To-Tomcat-Example/WebServices/web" rootProjectPath="$MODULE_DIR$/../../../JAX-WS-Deploy-To-Tomcat-Example/WebServices/web" />
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output-test url="file://$MODULE_DIR$/../../build/classes/java/test" />
     <exclude-output />
@@ -29,8 +30,12 @@
     <orderEntry type="library" name="Gradle: javax.xml.ws:jaxws-api:2.3.1" level="project" />
     <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-http-spi:9.4.4.v20170414" level="project" />
     <orderEntry type="library" name="Gradle: com.auth0:java-jwt:3.8.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.json:json:20190722" level="project" />
+    <orderEntry type="library" name="Gradle: io.jsonwebtoken:jjwt-api:0.10.7" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.12" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: io.jsonwebtoken:jjwt-impl:0.10.7" level="project" />
     <orderEntry type="library" name="Gradle: org.hibernate.common:hibernate-commons-annotations:5.1.0.Final" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: io.jsonwebtoken:jjwt-jackson:0.10.7" level="project" />
     <orderEntry type="library" name="Gradle: org.jboss.logging:jboss-logging:3.3.2.Final" level="project" />
     <orderEntry type="library" name="Gradle: javax.persistence:javax.persistence-api:2.2" level="project" />
     <orderEntry type="library" name="Gradle: ognl:ognl:3.1.12" level="project" />
@@ -55,10 +60,10 @@
     <orderEntry type="library" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
     <orderEntry type="library" name="Gradle: org.glassfish.jaxb:txw2:2.3.1" level="project" />
     <orderEntry type="library" name="Gradle: com.sun.istack:istack-commons-runtime:3.0.7" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.9.8" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: commons-codec:commons-codec:1.11" level="project" />
     <orderEntry type="library" name="Gradle: org.jvnet.staxex:stax-ex:1.8" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.9.8" level="project" />
     <orderEntry type="library" name="Gradle: com.sun.xml.fastinfoset:FastInfoset:1.2.15" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: commons-codec:commons-codec:1.11" level="project" />
     <orderEntry type="library" name="Gradle: org.eclipse.jetty.websocket:websocket-client:9.4.14.v20181114" level="project" />
     <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-client:9.4.14.v20181114" level="project" />
     <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-http:9.4.14.v20181114" level="project" />

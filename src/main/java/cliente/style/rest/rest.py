@@ -1,27 +1,39 @@
 import unirest
 import json
 
-print ("Introduzca 1 para listar urls, 2 para crear url y 3 para consultar urls publicadas por un usuario")
+print ("Introduzca 1 para login, 2 para listar urls, 3 para crear url, 4 para consultar urls publicadas por un usuario")
 
 opcion = raw_input()
 
 if opcion == "1":
+    user = {}
+    print ("Digite el username: ")
+    user["username"] = raw_input()
+    print ("Digite el password: ")
+    user["password"] = raw_input()
+    token = unirest.post("http://localhost:8080/rest/login/", headers={ "Accept": "application/json"}, params=json.dumps(user)).body
+    print (token)
+
+if opcion == "2":
+    print ("Digite la clave: ")
+    token = raw_input()
     urls = unirest.get("http://localhost:8080/rest/links", headers={ "Accept": "application/json" }).body
     print (urls)
 
-if opcion == "2":
+if opcion == "3":
     url = {}
     print ("Digite id de usuario: ")
-    id = raw_input()
+    url['id'] = raw_input()
     print ("Digite la url: ")
     url['url'] = raw_input()
 
-    link = unirest.post("http://localhost:8080/rest/url/crear/"+id, headers={ "Accept": "application/json" }, params=json.dumps(url)).body
+    link = unirest.post("http://localhost:8080/rest/url/crear/", headers={ "Accept": "application/json"}, params=json.dumps(url)).body
     print (link)
 
-if opcion == "3":
+if opcion == "4":
+    id = {}
     print ("Digite id de usuario: ")
-    id = raw_input()
-    urls = unirest.get("http://localhost:8080/rest/links/user/"+id, headers={ "Accept": "application/json" }).body
+    id['id'] = raw_input()
+    urls = unirest.post("http://localhost:8080/rest/links/user/", headers={ "Accept": "application/json" }, params=json.dumps(id)).body
 
     print (urls)
