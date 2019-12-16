@@ -6,6 +6,7 @@
       <module name="acortador2.parcial2.test" target="1.8" />
       <module name="parcial2.main" target="1.8" />
       <module name="parcial2.test" target="1.8" />
+      <module name="pucmm.parcial2.test" target="1.8" />
       <module name="Web.acortador2.parcial2.test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
