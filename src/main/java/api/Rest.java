@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 
+import static org.h2.util.StringUtils.isNullOrEmpty;
 import static services.Inicio.acortar;
 import static services.Inicio.getSession;
 import static spark.Spark.*;
@@ -57,16 +58,27 @@ public class Rest {
             });
             path("/links", () -> {
 
-                post("", (request, response) ->{
+                get("", (request, response) ->{
+
+                    if (isNullOrEmpty(request.headers("token"))){
+                        response.redirect("/404");
+                        return "fallo";
+                    }
                     JWebToken incomingToken = new JWebToken(request.headers("token"));
 
                     if (incomingToken.isValid()) {
                         return urlService.getAllLinks();
-                    } else{
+                    }
+                    else{
                         return "Token expirado o incorrecto";
                     }
                 }, json());
                 post("/user/", "application/json", (request, response) -> {
+
+                    if (isNullOrEmpty(request.headers("token"))){
+                        response.redirect("/404");
+                        return "fallo";
+                    }
                     JWebToken incomingToken = new JWebToken(request.headers("token"));
 
                     if (incomingToken.isValid()) {
@@ -83,7 +95,10 @@ public class Rest {
 
             path("/url", () -> {
                 post("/crear/", "application/json", (request, response) -> {
-
+                    if (isNullOrEmpty(request.headers("token"))){
+                        response.redirect("/404");
+                        return "fallo";
+                    }
                     JWebToken incomingToken = new JWebToken(request.headers("token"));
 
                     if (incomingToken.isValid()) {

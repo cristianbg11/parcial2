@@ -61,7 +61,22 @@ dependencies {
     compile group: 'javax.xml.ws', name: 'jaxws-api', version: '2.3.1'
 
     // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-http-spi
-    compile group: 'org.eclipse.jetty', name: 'jetty-http-spi', version: '9.4.4.v20170414'
+    compile group: 'org.eclipse.jetty', name: 'jetty-http-spi', version: '9.4.24.v20191120'
+
+    // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-http
+    compile group: 'org.eclipse.jetty', name: 'jetty-http', version: '9.4.24.v20191120'
+
+    // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server
+    compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.24.v20191120'
+
+    // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-util
+    compile group: 'org.eclipse.jetty', name: 'jetty-util', version: '9.4.24.v20191120'
+
+    // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-io
+    compile group: 'org.eclipse.jetty', name: 'jetty-io', version: '9.4.24.v20191120'
+
+    // https://mvnrepository.com/artifact/org.eclipse.jetty.aggregate/jetty-all-server
+    testCompile group: 'org.eclipse.jetty.aggregate', name: 'jetty-all-server', version: '8.2.0.v20160908'
 
     // https://mvnrepository.com/artifact/com.auth0/java-jwt
     compile group: 'com.auth0', name: 'java-jwt', version: '3.8.3'
