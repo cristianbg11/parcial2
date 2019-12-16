@@ -28,8 +28,9 @@ public class Main {
         Class.forName("org.h2.Driver");
 
         port(getHerokuAssignedPort());
-        startDb();
         Soap.init();
+        startDb();
+
         final Session secion = getSession();
         staticFiles.location("/publico");
         EntityManager em = getSession();
