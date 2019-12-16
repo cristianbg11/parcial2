@@ -7,6 +7,6 @@ import javax.xml.ws.Endpoint;
 public class Soap {
     public static void init() {
 
-        Endpoint.publish("http://localhost:9090/ws/urls", new UrlWebServiceImpl());
+        Endpoint.publish("http://127.0.0.1/ws/urls", new UrlWebServiceImpl());
     }
 }
