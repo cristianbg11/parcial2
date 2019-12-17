@@ -128,7 +128,8 @@
                             </li>
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow" role="presentation">
-                                <li class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><#if usuario?has_content>
+                                <li class="nav-item dropdown no-arrow">
+                                <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><#if usuario?has_content>
                                             <span class="d-none d-lg-inline mr-2 text-gray-600 small">${usuario.username}</span>
                                             <#if usuario.perfil?has_content>
                                                 <img class="border rounded-circle img-profile" src="${usuario.perfil}">
@@ -136,6 +137,7 @@
                                                 <img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg">
                                             </#if>
                                         </#if>
+                                </a>
                                     <div
                                         class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu">
                                         <#if usuario.id != 1>
@@ -174,7 +176,7 @@
                                             </#if>
                                         </a>
                                     </td>
-                                    <td class="text-right"><a href="/r/${url.code}" target="_blank">https://cut/r/${url.code}</a>
+                                    <td class="text-right"><a href="/r/${url.code}" target="_blank">https://pelon1.lospelones.me/r/${url.code}</a>
                                         <#if usuario.id !=1>
                                             <a href="/stats?id_url=${url.id}"><i class="fas fa-laugh-wink" style="margin-left: 5px;"></i></a>
                                         </#if>

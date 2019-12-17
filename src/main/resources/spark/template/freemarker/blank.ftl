@@ -158,7 +158,7 @@
             </nav>
             <div class="container-fluid">
                 <h3 class="text-dark mb-1">Estadisticas</h3>
-                <h5 class="text-dark mb-1">https://cut/r/${url.code}</h5>
+                <h5 class="text-dark mb-1">https://pelon1.lospelones.me/r/${url.code}</h5>
             </div>
                 <table id="example" class="table table-striped table-bordered" width="100%">
                     <thead>
