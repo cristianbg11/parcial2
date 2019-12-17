@@ -40,7 +40,9 @@ public class Main {
 
         new Rest();
         new FreeMarker();
-        get("/host", (request, response) -> request.host());
+        get("/host", (request, response) -> {
+            return request.host();
+        });
         get("/visitar", (request, response)-> {
             final Session sesion = getSession();
             UsuarioEntity usuario = sesion.find(UsuarioEntity.class, 1);
