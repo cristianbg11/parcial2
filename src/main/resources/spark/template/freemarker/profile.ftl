@@ -299,7 +299,7 @@
                         <#if profile = true>
                             <#if usuario.comentariosById?has_content>
                                 <#list usuario.comentariosById as comentario>
-                                    <div class="col col-9 col-md-10 survey-comment__text"><strong class="survey-comment__author-name">${comentario.usuarioByIdUsuario.username}</strong>
+                                    <div class="col col-9 col-md-10 survey-comment__text"><strong class="survey-comment__author-name">${comentario.username}</strong>
                                         <div class="survey-comment__text-content">
                                             <p class="text-justify text-secondary" style="font-size: 14px;">${comentario.comentario}<br></p>
                                         </div>
@@ -309,7 +309,7 @@
                         <#else>
                             <#if user.comentariosById?has_content>
                                 <#list user.comentariosById as comentario>
-                                    <div class="col col-9 col-md-10 survey-comment__text"><strong class="survey-comment__author-name">${comentario.usuarioByIdUsuario.username}</strong>
+                                    <div class="col col-9 col-md-10 survey-comment__text"><strong class="survey-comment__author-name">${comentario.username}</strong>
                                         <div class="survey-comment__text-content">
                                             <p class="text-justify text-secondary" style="font-size: 14px;">${comentario.comentario}<br></p>
                                         </div>
