@@ -1,4 +1,5 @@
 import INF.AccesoEntity;
+import INF.ComentarioEntity;
 import INF.UrlEntity;
 import INF.UsuarioEntity;
 import api.Rest;
@@ -173,6 +174,20 @@ public class Main {
             }));
         });
 
+        post("/comentar", (request, response) -> {
+            final Session sesion = getSession();
+            spark.Session session=request.session(true);
+            UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+            ComentarioEntity comentario = new ComentarioEntity();
+            em.getTransaction().begin();
+            comentario.comentario = request.queryParams("comentario");
+            comentario.username = usuario.username;
+            comentario.usuarioByIdUsuario = usuario;
+            em.persist(comentario);
+            em.getTransaction().commit();
+            response.redirect("/post?id_post=");
+            return "Comentario Creado";
+        });
         get("*", (request, response) -> {
             response.redirect("/404");
             return "404!!";

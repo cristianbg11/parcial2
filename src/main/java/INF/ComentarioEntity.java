@@ -9,10 +9,10 @@ import java.util.Objects;
 @Table(name = "COMENTARIO", schema = "PUBLIC", catalog = "ACORTADOR")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ComentarioEntity {
-    private int id;
-    private String comentario;
-    private String username;
-    private UsuarioEntity usuarioByIdUsuario;
+    public int id;
+    public String comentario;
+    public String username;
+    public UsuarioEntity usuarioByIdUsuario;
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)

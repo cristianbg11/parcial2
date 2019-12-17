@@ -134,11 +134,17 @@
                             </li>
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow" role="presentation">
-                                <li class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><span class="d-none d-lg-inline mr-2 text-gray-600 small">
+                                <li class="nav-item dropdown no-arrow">
+                                <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">
                                         <#if usuario?has_content>
-                                            ${usuario.username}
+                                            <span class="d-none d-lg-inline mr-2 text-gray-600 small">${usuario.username}</span>
+                                            <#if usuario.perfil?has_content>
+                                                <img class="border rounded-circle img-profile" src="${usuario.perfil}">
+                                            <#else>
+                                                <img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg">
+                                            </#if>
                                         </#if>
-                                    </span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg"></a>
+                                </a>
                                     <div
                                         class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu">
                                         <#if usuario.id != 1>

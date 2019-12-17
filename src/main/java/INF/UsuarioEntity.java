@@ -115,8 +115,6 @@ public class UsuarioEntity {
         this.latitud = latitud;
     }
 
-
-
     @Basic
     @Column(name = "PERFIL", nullable = true)
     public String getPerfil() {

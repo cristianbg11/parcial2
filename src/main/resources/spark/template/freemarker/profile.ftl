@@ -129,11 +129,14 @@
                             </li>
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow" role="presentation">
-                                <li class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><span class="d-none d-lg-inline mr-2 text-gray-600 small">
-                                        <#if usuario?has_content>
-                                            ${usuario.username}
+                                <li class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><#if usuario?has_content>
+                                            <span class="d-none d-lg-inline mr-2 text-gray-600 small">${usuario.username}</span>
+                                            <#if usuario.perfil?has_content>
+                                                <img class="border rounded-circle img-profile" src="${usuario.perfil}">
+                                            <#else>
+                                                <img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg">
+                                            </#if>
                                         </#if>
-                                    </span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg"></a>
                                     <div
                                         class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu">
                                         <#if usuario.id != 1>
@@ -291,30 +294,35 @@
                         <p class="text-primary m-0 font-weight-bold">Foro</p>
                     </div>
                     <div class="card-body">
-                        <div class="col col-9 col-md-10 survey-comment__text"><strong class="survey-comment__author-name">Tony Biskup</strong><button class="btn btn-primary btn-sm" type="submit">Eliminar</button>
-                            <div class="survey-comment__text-content">
-                                <p class="text-justify text-secondary" style="font-size: 14px;">Thanks for the gifts! I sold the skin care cream on eBay and made £100 on it. Oh by the way, nothing is stopping me from signing up to all the gifts listed, which I did, lol. Just letting you know.<br></p>
-                            </div><div class="survey-comment__date-time">
-<script>
-var mydate = new Date()
-mydate.setDate(mydate.getDate() - 14);
-var year = mydate.getYear()
-if (year < 1000)
-year += 1900
-var day = mydate.getDay()
-var month = mydate.getMonth()
-var daym = mydate.getDate()
-if (daym < 10)
-daym = "0" + daym
-var dayarray = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
-var montharray = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
-document.write("" + montharray[month] + " " + daym + ", " + year + "")
-</script>
-</div></div>
+                        <#if usuario.comentariosById?has_content>
+                            <#list usuario.comentariosById as comentario>
+                                <div class="col col-9 col-md-10 survey-comment__text"><strong class="survey-comment__author-name">${comentario.usuarioByUsuarioId.username}</strong>
+                                    <div class="survey-comment__text-content">
+                                        <p class="text-justify text-secondary" style="font-size: 14px;">${comentario.comentario}<br></p>
+
+                                    </div><div class="survey-comment__date-time">
+                                        <script>
+                                            var mydate = new Date()
+                                            mydate.setDate(mydate.getDate() - 14);
+                                            var year = mydate.getYear()
+                                            if (year < 1000)
+                                                year += 1900
+                                            var day = mydate.getDay()
+                                            var month = mydate.getMonth()
+                                            var daym = mydate.getDate()
+                                            if (daym < 10)
+                                                daym = "0" + daym
+                                            var dayarray = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
+                                            var montharray = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+                                            document.write("" + montharray[month] + " " + daym + ", " + year + "")
+                                        </script>
+                                    </div></div>
+                            </#list>
+                        </#if>
                         <div class="row">
                             <div class="col">
                                 <form>
-                                    <div class="form-group"><label for="signature"><strong>Usuario</strong><br></label><textarea class="form-control" rows="6" name="signature"></textarea></div>
+                                    <div class="form-group"><label for="signature"><strong>Usuario: ${usuario.username}</strong><br></label><textarea class="form-control" rows="6" name="signature"></textarea></div>
                                     <div class="form-group">
                                         <div class="custom-control custom-switch"><input class="custom-control-input" type="checkbox" id="formCheck-1"><label class="custom-control-label" for="formCheck-1"><strong>Notificar</strong></label></div>
                                     </div>
