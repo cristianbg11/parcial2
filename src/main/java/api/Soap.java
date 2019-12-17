@@ -10,7 +10,15 @@ import javax.xml.ws.Endpoint;
 public class Soap {
     public static void init() throws Exception {
 
-        Endpoint.publish("http://localhost:80/ws/urls?wsdl", new UrlWebServiceImpl());
+        Server server = new Server(9090);
+        JettyHttpServer jettyServer = new JettyHttpServer(server, true);
+        Endpoint endpoint = Endpoint.create(new UrlWebServiceImpl());
+        ContextHandlerCollection collection = new ContextHandlerCollection();
+        server.setHandler(collection);
+
+        endpoint.publish( jettyServer.createContext("/ws"));
+        server.start();
+        //Endpoint.publish("http://0.0.0.0:8080/ws/urls", new UrlWebServiceImpl());
     }
 
 }

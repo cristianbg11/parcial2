@@ -171,7 +171,13 @@
                     <#if accesos?has_content>
                         <#list accesos as acceso>
                             <tr>
-                                <td>${acceso.usuarioByIdUsuario.username}</td>
+                                <td>
+                                    <#if acceso.usuarioByIdUsuario.id != 1>
+                                        <a href="ver?id_user=${acceso.usuarioByIdUsuario.id}">${acceso.usuarioByIdUsuario.username}</a>
+                                    <#else>
+                                        ${acceso.usuarioByIdUsuario.username}
+                                    </#if>
+                                </td>
                                 <td>${acceso.ip}</td>
                                 <td>${acceso.navegador}</td>
                                 <td>${acceso.sistema}</td>

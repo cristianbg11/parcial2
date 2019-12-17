@@ -14,6 +14,7 @@ import spark.Request;
 import spark.Response;
 
 import javax.persistence.EntityManager;
+import java.io.File;
 import java.net.InetAddress;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -29,7 +30,7 @@ public class Inicio {
     static {
         try {
             Configuration configuration = new Configuration();
-            configuration.configure();
+            configuration.configure(new File("src/main/resources/hibernate.cfg.xml"));
 
             ourSessionFactory = configuration.buildSessionFactory();
         } catch (Throwable ex) {

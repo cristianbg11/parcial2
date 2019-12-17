@@ -6,16 +6,16 @@ import api.Soap;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import services.FreeMarker;
+import spark.utils.IOUtils;
 
 import javax.persistence.EntityManager;
-import java.io.IOException;
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.http.Part;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +33,8 @@ public class Main {
         staticFiles.location("/publico");
         EntityManager em = getSession();
         InetAddress ip = InetAddress.getLocalHost();
+        File uploadDir = new File("src/main/resources/publico/assets/img/avatars");
+        uploadDir.mkdir(); // create the upload directory if it doesn't exist
 
         if (secion.find(UsuarioEntity.class, 1)==null){
             IniciarUsuario(em);
@@ -128,6 +130,27 @@ public class Main {
             return "acceso Borrado";
         });
 
+        post("/upload", (request, response) -> {
+            request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement(uploadDir.getPath()));
+            Part filePart = request.raw().getPart("user_logo");
+
+            try (InputStream inputStream = filePart.getInputStream()) {
+                OutputStream outputStream = new FileOutputStream(uploadDir.getPath() + "/" + filePart.getSubmittedFileName());
+                IOUtils.copy(inputStream, outputStream);
+                outputStream.close();
+            }
+            int usuarioId = Integer.parseInt(request.queryParams("usuario_id"));
+            final Session sesion = getSession();
+            UsuarioEntity usuario = sesion.find(UsuarioEntity.class, usuarioId);
+            em.getTransaction().begin();
+            usuario.setPerfil("assets/img/avatars/" + filePart.getSubmittedFileName());
+            em.merge(usuario);
+            em.getTransaction().commit();
+
+            response.redirect("/perfil");
+            return "subido";
+        });
+
         path("/r", ()->{
             get("/:code", ((request, response) -> {
                 String codigo = request.params("code");
@@ -156,5 +179,4 @@ public class Main {
         });
 
     }
-
 }

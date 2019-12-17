@@ -44,6 +44,7 @@ public class FreeMarker {
                 final Session sesion = getSession();
                 usuario = sesion.find(UsuarioEntity.class, 1);
                 session.attribute("usuario", usuario);
+                attributes.put("usuario",usuario);
             } else if (usuario.id==1){
                 attributes.put("usuario",usuario);
                 attributes.put("urls",urlList);
@@ -149,7 +150,7 @@ public class FreeMarker {
             List<AccesoEntity> accesos = query.getResultList();
 
             //Object[] objects;
-            Query query1 = (Query) em.createQuery("select a.usuarioByIdUsuario.username, count(*) as cant from AccesoEntity a where a.urlByIdUrl = :url group by a.usuarioByIdUsuario.username order by cant");
+            Query query1 = (Query) em.createQuery("select a.usuarioByIdUsuario.username, count(a) as cant from AccesoEntity a where a.urlByIdUrl = :url group by a.usuarioByIdUsuario.username order by cant");
             query1.setParameter("url", url);
             List<Object> objects = query1.getResultList();
             ArrayList<UserUrl> usuarios = new ArrayList<>();

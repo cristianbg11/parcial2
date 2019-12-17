@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
     <link rel="stylesheet" href="assets/css/Pretty-Search-Form.css">
+    <link rel="stylesheet" href="assets/css/Custom-File-Upload.css">
 </head>
 
 <body id="page-top">
@@ -152,9 +153,18 @@
                 <div class="row mb-3">
                     <div class="col-lg-4">
                         <div class="card mb-3">
-                            <div class="card-body text-center shadow"><img class="rounded-circle mb-3 mt-4" src="assets/img/dogs/image2.jpeg" width="160" height="160">
+                            <div class="card-body text-center shadow">
+                                <img class="rounded-circle mb-3 mt-4" src="assets/img/dogs/image2.jpeg" width="160" height="160">
                                 <#if profile == true>
-                                    <div class="mb-3"><button class="btn btn-outline-primary btn-sm" type="button">Cambiar foto</button></div>
+                                    <form class="text-center" action="/upload" method="POST">
+                                        <div style="width: 200px;margin: 0 auto;">
+                                            <input type="file" id="user_group_logo" class="custom-file-input" accept="image/*" name="user_logo" formenctype="multipart/form-data" />
+                                            <div class="text-center">
+                                                <label id="user_group_label" for="user_group_logo"><i class="fas fa-upload"></i> Elige una imagen...</label>
+                                            </div>
+                                            <div class="text-center mt-2"><button class="btn btn-primary" type="submit">Subir</button></div>
+                                        </div>
+                                    </form>
                                 </#if>
                             </div>
                         </div>
@@ -320,6 +330,7 @@ document.write("" + montharray[month] + " " + daym + ", " + year + "")
     <script src="assets/js/bs-charts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
     <script src="assets/js/theme.js"></script>
+    <script src="assets/js/Custom-File-Upload.js"></script>
 </body>
 
 </html>
