@@ -296,35 +296,35 @@
                         <p class="text-primary m-0 font-weight-bold">Foro</p>
                     </div>
                     <div class="card-body">
-                        <#if usuario.comentariosById?has_content>
-                            <#list usuario.comentariosById as comentario>
-                                <div class="col col-9 col-md-10 survey-comment__text"><strong class="survey-comment__author-name">${comentario.usuarioByUsuarioId.username}</strong>
-                                    <div class="survey-comment__text-content">
-                                        <p class="text-justify text-secondary" style="font-size: 14px;">${comentario.comentario}<br></p>
-
-                                    </div><div class="survey-comment__date-time">
-                                        <script>
-                                            var mydate = new Date()
-                                            mydate.setDate(mydate.getDate() - 14);
-                                            var year = mydate.getYear()
-                                            if (year < 1000)
-                                                year += 1900
-                                            var day = mydate.getDay()
-                                            var month = mydate.getMonth()
-                                            var daym = mydate.getDate()
-                                            if (daym < 10)
-                                                daym = "0" + daym
-                                            var dayarray = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
-                                            var montharray = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
-                                            document.write("" + montharray[month] + " " + daym + ", " + year + "")
-                                        </script>
-                                    </div></div>
-                            </#list>
+                        <#if profile = true>
+                            <#if usuario.comentariosById?has_content>
+                                <#list usuario.comentariosById as comentario>
+                                    <div class="col col-9 col-md-10 survey-comment__text"><strong class="survey-comment__author-name">${comentario.usuarioByIdUsuario.username}</strong>
+                                        <div class="survey-comment__text-content">
+                                            <p class="text-justify text-secondary" style="font-size: 14px;">${comentario.comentario}<br></p>
+                                        </div>
+                                    </div>
+                                </#list>
+                            </#if>
+                        <#else>
+                            <#if user.comentariosById?has_content>
+                                <#list user.comentariosById as comentario>
+                                    <div class="col col-9 col-md-10 survey-comment__text"><strong class="survey-comment__author-name">${comentario.usuarioByIdUsuario.username}</strong>
+                                        <div class="survey-comment__text-content">
+                                            <p class="text-justify text-secondary" style="font-size: 14px;">${comentario.comentario}<br></p>
+                                        </div>
+                                    </div>
+                                </#list>
+                            </#if>
                         </#if>
                         <div class="row">
                             <div class="col">
-                                <form>
-                                    <div class="form-group"><label for="signature"><strong>Usuario: ${usuario.username}</strong><br></label><textarea class="form-control" rows="6" name="signature"></textarea></div>
+                                <form action="/comentar" method="POST">
+                                    <div class="form-group"><label for="signature"><strong>Usuario: ${usuario.username}</strong><br></label>
+                                        <#if user?has_content>
+                                            <input type="hidden" name="user_id" value="${user.id}">
+                                        </#if>
+                                        <textarea class="form-control" rows="6" name="comentario"></textarea></div>
                                     <div class="form-group">
                                         <div class="custom-control custom-switch"><input class="custom-control-input" type="checkbox" id="formCheck-1"><label class="custom-control-label" for="formCheck-1"><strong>Notificar</strong></label></div>
                                     </div>

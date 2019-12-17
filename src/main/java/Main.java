@@ -178,14 +178,16 @@ public class Main {
             final Session sesion = getSession();
             spark.Session session=request.session(true);
             UsuarioEntity usuario = (UsuarioEntity)(session.attribute("usuario"));
+            int id_user = Integer.parseInt(request.queryParams("user_id"));
+            UsuarioEntity user = sesion.find(UsuarioEntity.class, id_user);
             ComentarioEntity comentario = new ComentarioEntity();
             em.getTransaction().begin();
             comentario.comentario = request.queryParams("comentario");
             comentario.username = usuario.username;
-            comentario.usuarioByIdUsuario = usuario;
+            comentario.usuarioByIdUsuario = user;
             em.persist(comentario);
             em.getTransaction().commit();
-            response.redirect("/post?id_post=");
+            response.redirect("/ver?id_user="+id_user);
             return "Comentario Creado";
         });
         get("*", (request, response) -> {

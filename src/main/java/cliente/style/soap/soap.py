@@ -1,7 +1,7 @@
 
 from zeep import Client
 
-url = "http://localhost/ws/urls?wsdl"
+url = "http://pelon1.lospelones.me:9090/ws/urls?wsdl"
 client = Client(url)
 
 print ("Introduzca 1 para listar urls, 2 para crear url y 3 para consultar urls publicadas por un usuario")

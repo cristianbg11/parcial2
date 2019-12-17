@@ -11,13 +11,13 @@ if opcion == "1":
     user["username"] = raw_input()
     print ("Digite el password: ")
     user["password"] = raw_input()
-    token = unirest.post("https://arcut.herokuapp.com/rest/login/", headers={ "Accept": "application/json"}, params=json.dumps(user)).body
+    token = unirest.post("https://pelon1.lospelones.me/rest/login/", headers={ "Accept": "application/json"}, params=json.dumps(user)).body
     print (token)
 
 if opcion == "2":
     print ("Digite la clave: ")
     token = raw_input()
-    urls = unirest.get("https://arcut.herokuapp.com/rest/links", headers={ "Accept": "application/json", "token": token}).body
+    urls = unirest.get("https://pelon1.lospelones.me/rest/links", headers={ "Accept": "application/json", "token": token}).body
     print (urls)
 
 if opcion == "3":
@@ -28,14 +28,14 @@ if opcion == "3":
     url['url'] = raw_input()
     print ("Digite la clave: ")
     token = raw_input()
-    link = unirest.post("https://arcut.herokuapp.com/rest/url/crear/", headers={ "Accept": "application/json", "token": token}, params=json.dumps(url)).body
+    link = unirest.post("https://pelon1.lospelones.me/rest/url/crear/", headers={ "Accept": "application/json", "token": token}, params=json.dumps(url)).body
     print (link)
 
 if opcion == "4":
     id = {}
     print ("Digite id de usuario: ")
     id['id'] = raw_input()
-    urls = unirest.post("http://localhost:8080/rest/links/user/", headers={ "Accept": "application/json", "token": token}, params=json.dumps(id)).body
     print ("Digite la clave: ")
     token = raw_input()
+    urls = unirest.post("https://pelon1.lospelones.me/rest/links/user/", headers={ "Accept": "application/json", "token": token}, params=json.dumps(id)).body
     print (urls)
