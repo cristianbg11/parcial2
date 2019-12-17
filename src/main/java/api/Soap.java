@@ -10,7 +10,7 @@ import javax.xml.ws.Endpoint;
 public class Soap {
     public static void init() throws Exception {
 
-        Endpoint.publish("http://localhost:443/ws/urls?wsdl", new UrlWebServiceImpl());
+        Endpoint.publish("http://localhost:80/ws/urls?wsdl", new UrlWebServiceImpl());
     }
 
 }
